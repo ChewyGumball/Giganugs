@@ -6,16 +6,16 @@ namespace {
 
 	std::unordered_map<HWND, Window*> messagePumps;
 
-	LRESULT CALLBACK MainMessagePump(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
+	LRESULT CALLBACK MainMessagePump(HWND windowHandle, UINT message, WPARAM wparam, LPARAM lparam)
 	{
 		switch (message) {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			break;
 		default:
-			auto window = messagePumps.find(hwnd);
+			auto window = messagePumps.find(windowHandle);
 			if (window == messagePumps.end()) {
-				return DefWindowProc(hwnd, message, wparam, lparam);
+				return DefWindowProc(windowHandle, message, wparam, lparam);
 			}
 			else {
 				return window->second->MessagePump(message, wparam, lparam);
@@ -28,11 +28,11 @@ namespace {
 
 LRESULT Window::MessagePump(UINT message, WPARAM wparam, LPARAM lparam)
 {
-	return DefWindowProc(hwnd, message, wparam, lparam);
+	return DefWindowProc(windowHandle, message, wparam, lparam);
 }
 
-Window::Window(int width, int height, const std::wstring& windowName) 
-	: hInstance(GetModuleHandle(nullptr)), applicationName(windowName)
+Window::Window(int width, int height, const std::wstring& windowName, int showState) 
+	: instance(GetModuleHandle(nullptr)), applicationName(windowName)
 {
 	WNDCLASSEX windowClass;
 
@@ -41,7 +41,7 @@ Window::Window(int width, int height, const std::wstring& windowName)
 	windowClass.lpfnWndProc = MainMessagePump;
 	windowClass.cbClsExtra = 0;
 	windowClass.cbWndExtra = 0;
-	windowClass.hInstance = hInstance;
+	windowClass.hInstance = instance;
 	windowClass.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
 	windowClass.hIconSm = windowClass.hIcon;
 	windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
@@ -54,15 +54,14 @@ Window::Window(int width, int height, const std::wstring& windowName)
 		return;
 	}
 
-	hwnd = CreateWindowEx(WS_EX_APPWINDOW, windowClassName.c_str(), applicationName.c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, nullptr, nullptr, hInstance, nullptr);
+	windowHandle = CreateWindowEx(WS_EX_APPWINDOW, windowClassName.c_str(), applicationName.c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, nullptr, nullptr, instance, nullptr);
 
-	if (!hwnd) {
+	if (!windowHandle) {
 		MessageBox(nullptr, L"Failed to create window!", L"ERROR", 0);
 		return;
 	}
 
-	ShowWindow(hwnd, SW_SHOW);
-	UpdateWindow(hwnd);
+	ShowWindow(windowHandle, showState);
 }
 
 Window::~Window()
