@@ -2,19 +2,29 @@
 #include <string>
 #include <windows.h>
 
-class Window
-{
+namespace Giganugs::Graphics {
 
-private: 
-	HINSTANCE instance;
-	HWND windowHandle;
-	std::wstring applicationName;
+	class Window
+	{
+
+	private:
+		HINSTANCE instance;
+		HWND windowHandle;
+		std::wstring applicationName;
+
+		int width;
+		int height;
 
 
-public:
-	Window(int width, int height, const std::wstring& windowName, int showState = SW_SHOW);
-	~Window();
+	public:
+		Window(int width, int height, const std::wstring& windowName, int showState = SW_SHOW);
+		~Window();
 
-	LRESULT MessagePump(UINT message, WPARAM wparam, LPARAM lparam);
-};
+		LRESULT MessagePump(UINT message, WPARAM wparam, LPARAM lparam);
 
+		const HWND handle() const;
+
+		int Width() const;
+		int Height() const;
+	};
+}
