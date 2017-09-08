@@ -1,10 +1,9 @@
-#include "Window.h"
-#include "Renderer.h"
+#include "Graphics/Window.h"
+#include "Graphics/Renderer.h"
 #include <windows.h>
 #include <DirectXMath.h>
 
 int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-
 	if(!DirectX::XMVerifyCPUSupport()) {
 		MessageBox(nullptr, L"Direct X Math is not supported on this platform!", L"ERROR", 0);
 		return 1;
@@ -24,6 +23,7 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		}
 		else {
 			renderer.Clear();
+			renderer.Draw();
 			renderer.Swap();
 		}
 	}
