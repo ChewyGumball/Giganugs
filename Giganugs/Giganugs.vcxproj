@@ -19,13 +19,37 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\lib\SimpleFileWatcher\FileWatcher.cpp" />
+    <ClCompile Include="src\lib\SimpleFileWatcher\FileWatcherWin32.cpp" />
+    <ClCompile Include="src\Sprites\SpriteAnimation.cpp" />
+    <ClCompile Include="src\Sprites\SpriteAtlasPart.cpp" />
+    <ClCompile Include="src\Sprites\SpriteAtlas.cpp" />
+    <ClCompile Include="src\Sprites\Sprite.cpp" />
+    <ClCompile Include="src\Sprites\SpriteMap.cpp" />
     <ClCompile Include="src\Graphics\Renderer.cpp" />
     <ClCompile Include="src\Graphics\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Graphics\VertexBufferDefinition.cpp" />
+    <ClCompile Include="src\Graphics\VertexBuffer.cpp" />
+    <ClCompile Include="src\Util\FileUtils.cpp" />
+    <ClCompile Include="src\Util\StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Graphics\Renderer.h" />
     <ClInclude Include="include\Graphics\Window.h" />
+    <ClInclude Include="include\Graphics\VertexBufferDefinition.h" />
+    <ClInclude Include="include\Graphics\VertexBuffer.h" />
+    <ClInclude Include="include\lib\SimpleFileWatcher\FileWatcher.h" />
+    <ClInclude Include="include\lib\SimpleFileWatcher\FileWatcherImpl.h" />
+    <ClInclude Include="include\lib\SimpleFileWatcher\FileWatcherWin32.h" />
+    <ClInclude Include="include\lib\stb_image\stb_image.h" />
+    <ClInclude Include="include\Sprites\SpriteMap.h" />
+    <ClInclude Include="include\Sprites\Sprite.h" />
+    <ClInclude Include="include\Sprites\SpriteAtlas.h" />
+    <ClInclude Include="include\Sprites\SpriteAtlasPart.h" />
+    <ClInclude Include="include\Sprites\SpriteAnimation.h" />
+    <ClInclude Include="include\Util\FileUtils.h" />
+    <ClInclude Include="include\Util\StringUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\sprite.hlsl">

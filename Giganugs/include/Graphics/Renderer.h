@@ -4,8 +4,10 @@
 #include <dxgi1_4.h>
 #include <wrl.h>
 
+
 namespace Giganugs::Graphics {
 	class Window;
+	class VertexBuffer;
 
 	class Renderer
 	{
@@ -18,7 +20,7 @@ namespace Giganugs::Graphics {
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
 
-		Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
+		VertexBuffer* vertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> vertexBufferLayout;
 
 		D3D_FEATURE_LEVEL featureLevel;
@@ -26,6 +28,8 @@ namespace Giganugs::Graphics {
 	public:
 		Renderer(const Window* const window);
 		~Renderer();
+		Microsoft::WRL::ComPtr<ID3D11Device> getDevice();
+
 
 		void Draw();
 		void Clear();

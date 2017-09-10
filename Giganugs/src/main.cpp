@@ -1,7 +1,11 @@
-#include "Graphics/Window.h"
-#include "Graphics/Renderer.h"
 #include <windows.h>
 #include <DirectXMath.h>
+
+#include "Graphics/Window.h"
+#include "Graphics/Renderer.h"
+
+#include "Sprites/SpriteAtlas.h"
+#include "Sprites/SpriteAnimation.h"
 
 int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	if(!DirectX::XMVerifyCPUSupport()) {
@@ -9,8 +13,11 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		return 1;
 	}
 
-	Giganugs::Graphics::Window window(250, 250, L"HELPS!", nCmdShow);
+	Giganugs::Graphics::Window window(800, 800, L"HELPS!", nCmdShow);
 	Giganugs::Graphics::Renderer renderer(&window);
+
+	Giganugs::Sprites::SpriteAtlas atlas(0, "resources/sprites/atlases/sprites.atlas", renderer.getDevice());
+	Giganugs::Sprites::SpriteAnimation greyUp("resources/sprites/animations/dog_grey_walk_up.anim", &atlas);
 
 	MSG message;
 	bool running = true;

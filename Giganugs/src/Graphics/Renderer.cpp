@@ -1,5 +1,8 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/Window.h"
+#include "Graphics/VertexBufferDefinition.h"
+#include "Graphics/VertexBuffer.h"
+
 
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
@@ -49,8 +52,8 @@ namespace Giganugs::Graphics {
 
 		ComPtr<ID3DBlob> vertexCode;
 		ComPtr<ID3DBlob> pixelCode;
-		D3DCompileFromFile(L"shaders/sprite.hlsl", nullptr, nullptr, "vertexShader", "vs_4_0", 0, 0, &vertexCode, nullptr);
-		D3DCompileFromFile(L"shaders/sprite.hlsl", nullptr, nullptr, "pixelShader", "ps_4_0", 0, 0, &pixelCode, nullptr);
+		D3DCompileFromFile(L"resources/shaders/sprite.hlsl", nullptr, nullptr, "vertexShader", "vs_4_0", 0, 0, &vertexCode, nullptr);
+		D3DCompileFromFile(L"resources/shaders/sprite.hlsl", nullptr, nullptr, "pixelShader", "ps_4_0", 0, 0, &pixelCode, nullptr);
 
 		device->CreateVertexShader(vertexCode->GetBufferPointer(), vertexCode->GetBufferSize(), nullptr, &vertexShader);
 		device->CreatePixelShader(pixelCode->GetBufferPointer(), pixelCode->GetBufferSize(), nullptr, &pixelShader);
@@ -58,49 +61,37 @@ namespace Giganugs::Graphics {
 		context->VSSetShader(vertexShader.Get(), nullptr, 0);
 		context->PSSetShader(pixelShader.Get(), nullptr, 0);
 
-		D3D11_BUFFER_DESC vertexBufferDescription;
-		ZeroMemory(&vertexBufferDescription, sizeof(D3D11_BUFFER_DESC));
+		VertexBufferDefinition bufferDefinition({
+			{ VertexSemantic::POSITION, DXGI_FORMAT_R32G32B32_FLOAT },
+			{ VertexSemantic::TEXCOORD, DXGI_FORMAT_R32G32_FLOAT }
+		});
 
-		vertexBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
-		vertexBufferDescription.ByteWidth = sizeof(float) * 5 * 4; // [x y z] [s t] * 4
-		vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		
-		device->CreateBuffer(&vertexBufferDescription, nullptr, &vertexBuffer);
-
-		D3D11_MAPPED_SUBRESOURCE mappedVertexBuffer;
-		context->Map(vertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedVertexBuffer);
-
-		float vertexData[] = {
-			0, 0, 0,    0, 0,
-			0, 1, 0,    0, 1,
-			1, 0, 0,    1, 0,
-			1, 1, 0,    1, 1
+		std::vector<float> vertexData = {
+			-0.5, -0.5, 0,    0, 0,
+			-0.5,  0.5, 0,    0, 1,
+			 0.5, -0.5, 0,    1, 0,
+			 0.5,  0.5, 0,    1, 1
 		};
 
-		std::memcpy(mappedVertexBuffer.pData, vertexData, vertexBufferDescription.ByteWidth);
-
-		context->Unmap(vertexBuffer.Get(), 0);
-
-		D3D11_INPUT_ELEMENT_DESC vertexLayout[] = {
-			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-		};
-
-		device->CreateInputLayout(vertexLayout, 2, vertexCode->GetBufferPointer(), vertexCode->GetBufferSize(), &vertexBufferLayout);
+		vertexBuffer = new VertexBuffer(bufferDefinition, vertexData, context, device);
+		vertexBufferLayout = vertexBuffer->definition.createLayout(device, vertexCode);
 		context->IASetInputLayout(vertexBufferLayout.Get());
 	}
 
 
 	Renderer::~Renderer()
 	{
+		delete vertexBuffer;
+	}
+
+	Microsoft::WRL::ComPtr<ID3D11Device> Renderer::getDevice()
+	{
+		return device;
 	}
 
 	void Renderer::Draw()
 	{
-		uint32_t stride = sizeof(float) * 5;
-		uint32_t offset = 0;
-		context->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+		vertexBuffer->Set(context);
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 		context->Draw(4, 0);
 	}
