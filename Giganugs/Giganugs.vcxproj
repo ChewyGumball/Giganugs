@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Graphics\Shaders\PixelShader.cpp" />
     <ClCompile Include="src\lib\SimpleFileWatcher\FileWatcher.cpp" />
     <ClCompile Include="src\lib\SimpleFileWatcher\FileWatcherWin32.cpp" />
     <ClCompile Include="src\Sprites\SpriteAnimation.cpp" />
@@ -33,6 +34,7 @@
     <ClCompile Include="src\Graphics\VertexBuffer.cpp" />
     <ClCompile Include="src\Util\FileUtils.cpp" />
     <ClCompile Include="src\Util\StringUtils.cpp" />
+    <ClCompile Include="src\Graphics\Shaders\VertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Graphics\Renderer.h" />
@@ -50,13 +52,25 @@
     <ClInclude Include="include\Sprites\SpriteAnimation.h" />
     <ClInclude Include="include\Util\FileUtils.h" />
     <ClInclude Include="include\Util\StringUtils.h" />
+    <ClInclude Include="include\Graphics\Shaders\VertexShader.h" />
+    <ClInclude Include="include\Graphics\Shaders\PixelShader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\sprites\animations\dog_grey_walk_up.anim" />
+    <None Include="resources\sprites\atlases\sprites.atlas" />
     <None Include="shaders\sprite.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\sprites\images\sprites.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\sprite.hlsl">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

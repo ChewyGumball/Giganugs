@@ -50,22 +50,17 @@ namespace Giganugs::Graphics {
 		viewport.Height = static_cast<float>(window->Height());
 		context->RSSetViewports(1, &viewport);
 
-		ComPtr<ID3DBlob> vertexCode;
-		ComPtr<ID3DBlob> pixelCode;
-		D3DCompileFromFile(L"resources/shaders/sprite.hlsl", nullptr, nullptr, "vertexShader", "vs_4_0", 0, 0, &vertexCode, nullptr);
-		D3DCompileFromFile(L"resources/shaders/sprite.hlsl", nullptr, nullptr, "pixelShader", "ps_4_0", 0, 0, &pixelCode, nullptr);
-
-		device->CreateVertexShader(vertexCode->GetBufferPointer(), vertexCode->GetBufferSize(), nullptr, &vertexShader);
-		device->CreatePixelShader(pixelCode->GetBufferPointer(), pixelCode->GetBufferSize(), nullptr, &pixelShader);
-
-		context->VSSetShader(vertexShader.Get(), nullptr, 0);
-		context->PSSetShader(pixelShader.Get(), nullptr, 0);
-
-		VertexBufferDefinition bufferDefinition({
+		VertexBufferDefinition bufferDefinition(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, {
 			{ VertexSemantic::POSITION, DXGI_FORMAT_R32G32B32_FLOAT },
 			{ VertexSemantic::TEXCOORD, DXGI_FORMAT_R32G32_FLOAT }
 		});
 
+		vertexShader = new VertexShader(L"resources/shaders/sprite.hlsl", "vertexShader", bufferDefinition, device);
+		pixelShader = new PixelShader(L"resources/shaders/sprite.hlsl", "pixelShader", device);
+
+		vertexShader->Set(context);
+		pixelShader->Set(context);
+		
 		std::vector<float> vertexData = {
 			-0.5, -0.5, 0,    0, 0,
 			-0.5,  0.5, 0,    0, 1,
@@ -74,8 +69,7 @@ namespace Giganugs::Graphics {
 		};
 
 		vertexBuffer = new VertexBuffer(bufferDefinition, vertexData, context, device);
-		vertexBufferLayout = vertexBuffer->definition.createLayout(device, vertexCode);
-		context->IASetInputLayout(vertexBufferLayout.Get());
+		vertexBuffer->Set(context);
 	}
 
 
@@ -91,8 +85,6 @@ namespace Giganugs::Graphics {
 
 	void Renderer::Draw()
 	{
-		vertexBuffer->Set(context);
-		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 		context->Draw(4, 0);
 	}
 

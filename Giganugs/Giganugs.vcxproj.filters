@@ -60,6 +60,12 @@
     <ClCompile Include="src\lib\SimpleFileWatcher\FileWatcherWin32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Graphics\Shaders\VertexShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Shaders\PixelShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Graphics\Renderer.h">
@@ -107,8 +113,22 @@
     <ClInclude Include="include\lib\stb_image\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Graphics\Shaders\VertexShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Shaders\PixelShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\sprite.hlsl" />
+    <None Include="resources\sprites\animations\dog_grey_walk_up.anim" />
+    <None Include="resources\sprites\atlases\sprites.atlas" />
+    <None Include="resources\shaders\sprite.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\sprites\images\sprites.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

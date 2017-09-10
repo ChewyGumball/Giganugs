@@ -1,3 +1,5 @@
+
+
 struct Vertex {
 	float4 position: POSITION;
 	float2 textureCoordinates: TEXCOORD;

@@ -1,11 +1,13 @@
 #pragma once
 #include <vector>
-
 #include <wrl.h>
+
+#include <d3d11.h>
 
 #include "Graphics/VertexBufferDefinition.h"
 
 namespace Giganugs::Graphics {
+
 	class VertexBuffer
 	{
 	private:

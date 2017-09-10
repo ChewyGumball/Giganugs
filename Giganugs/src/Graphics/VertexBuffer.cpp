@@ -1,4 +1,7 @@
 #include "Graphics/VertexBuffer.h"
+
+#include <d3d11.h>
+
 using Microsoft::WRL::ComPtr;
 namespace Giganugs::Graphics {
 	
@@ -9,7 +12,7 @@ namespace Giganugs::Graphics {
 		ZeroMemory(&vertexBufferDescription, sizeof(D3D11_BUFFER_DESC));
 
 		vertexBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
-		vertexBufferDescription.ByteWidth = sizeof(float) * data.size();
+		vertexBufferDescription.ByteWidth = static_cast<uint32_t>(sizeof(float) * data.size());
 		vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		vertexBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
@@ -32,5 +35,6 @@ namespace Giganugs::Graphics {
 		uint32_t stride = definition.size();
 		uint32_t offset = 0;
 		context->IASetVertexBuffers(0, 1, buffer.GetAddressOf(), &stride, &offset);
+		context->IASetPrimitiveTopology(definition.primitiveTopology());
 	}
 }

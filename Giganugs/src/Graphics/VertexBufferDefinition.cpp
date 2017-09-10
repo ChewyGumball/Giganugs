@@ -9,8 +9,8 @@ namespace {
 	};
 
 	std::unordered_map<DXGI_FORMAT, uint32_t> sizes = {
-		{ DXGI_FORMAT_R32G32B32_FLOAT , sizeof(float) * 3 },
-		{ DXGI_FORMAT_R32G32_FLOAT , sizeof(float) * 2 },
+		{ DXGI_FORMAT_R32G32B32_FLOAT , static_cast<uint32_t>(sizeof(float) * 3) },
+		{ DXGI_FORMAT_R32G32_FLOAT , static_cast<uint32_t>(sizeof(float) * 2) },
 	};
 }
 
@@ -18,7 +18,7 @@ using Microsoft::WRL::ComPtr;
 
 namespace Giganugs::Graphics {
 
-	VertexBufferDefinition::VertexBufferDefinition(std::vector<std::pair<VertexSemantic, DXGI_FORMAT>> elements) : bufferSize(0)
+	VertexBufferDefinition::VertexBufferDefinition(D3D11_PRIMITIVE_TOPOLOGY topology, std::vector<std::pair<VertexSemantic, DXGI_FORMAT>> elements) : topology(topology), bufferSize(0)
 	{
 		for (auto& element : elements) {
 			addElement(element.first, element.second);
@@ -39,6 +39,11 @@ namespace Giganugs::Graphics {
 	uint32_t VertexBufferDefinition::size() const
 	{
 		return bufferSize;
+	}
+
+	D3D11_PRIMITIVE_TOPOLOGY VertexBufferDefinition::primitiveTopology() const
+	{
+		return topology;
 	}
 
 	ComPtr<ID3D11InputLayout> VertexBufferDefinition::createLayout(ComPtr<ID3D11Device> device, ComPtr<ID3DBlob> shaderCode) const

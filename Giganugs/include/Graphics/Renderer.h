@@ -4,6 +4,8 @@
 #include <dxgi1_4.h>
 #include <wrl.h>
 
+#include "Graphics/Shaders/VertexShader.h"
+#include "Graphics/Shaders/PixelShader.h"
 
 namespace Giganugs::Graphics {
 	class Window;
@@ -17,8 +19,8 @@ namespace Giganugs::Graphics {
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> backBuffer;
 
-		Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-		Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
+		VertexShader* vertexShader;
+		PixelShader* pixelShader;
 
 		VertexBuffer* vertexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> vertexBufferLayout;
