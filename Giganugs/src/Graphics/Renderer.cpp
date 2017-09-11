@@ -70,17 +70,34 @@ namespace Giganugs::Graphics {
 
 		vertexBuffer = new VertexBuffer(bufferDefinition, vertexData, context, device);
 		vertexBuffer->Set(context);
+
+		D3D11_SAMPLER_DESC samplerDescription = {};
+		samplerDescription.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDescription.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDescription.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDescription.MinLOD = 0;
+		samplerDescription.MaxLOD = D3D11_FLOAT32_MAX;
+
+
+		device->CreateSamplerState(&samplerDescription, &defaultSampler);
 	}
 
 
 	Renderer::~Renderer()
 	{
 		delete vertexBuffer;
+		delete vertexShader;
+		delete pixelShader;
 	}
 
 	Microsoft::WRL::ComPtr<ID3D11Device> Renderer::getDevice()
 	{
 		return device;
+	}
+
+	void Renderer::setTexture(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
+	{
+		pixelShader->SetTexture(0, texture, defaultSampler, context);
 	}
 
 	void Renderer::Draw()

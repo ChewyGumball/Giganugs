@@ -21,4 +21,9 @@ namespace Giganugs::Graphics {
 	{
 		context->PSSetShader(shader.Get(), nullptr, 0);
 	}
+	void PixelShader::SetTexture(int32_t slot, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context)
+	{
+		context->PSSetShaderResources(slot, 1, texture.GetAddressOf());
+		context->PSSetSamplers(slot, 1, sampler.GetAddressOf());
+	}
 }

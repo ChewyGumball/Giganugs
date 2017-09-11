@@ -19,6 +19,8 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	Giganugs::Sprites::SpriteAtlas atlas(0, "resources/sprites/atlases/sprites.atlas", renderer.getDevice());
 	Giganugs::Sprites::SpriteAnimation greyUp("resources/sprites/animations/dog_grey_walk_up.anim", &atlas);
 
+	renderer.setTexture(atlas.texture());
+
 	MSG message;
 	bool running = true;
 	while (running) {

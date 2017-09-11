@@ -1,4 +1,6 @@
 
+Texture2D spriteTexture : register(t0);
+sampler spriteSampler : register(s0);
 
 struct Vertex {
 	float4 position: POSITION;
@@ -7,22 +9,19 @@ struct Vertex {
 
 struct Pixel {
 	float4 position: SV_POSITION;
-	float4 textureCoordinates: COLOR;
+	float2 textureCoordinates: TEXCOORD;
 };
 
 Pixel vertexShader(Vertex vertex)
 {
 	Pixel output;
+
 	output.position = vertex.position;
-
-
-	output.textureCoordinates = float4(vertex.textureCoordinates, 1, 0);
+	output.textureCoordinates = vertex.textureCoordinates;
 
 	return output;
 }
 
 float4 pixelShader(Pixel pixel) : SV_TARGET {
-	float x = pixel.textureCoordinates.x;
-
-	return float4(saturate(x * 2), pixel.textureCoordinates.yzw);
+	return spriteTexture.Sample(spriteSampler, pixel.textureCoordinates);
 }

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="SpriteShader.cpp" />
     <ClCompile Include="src\Graphics\Shaders\PixelShader.cpp" />
     <ClCompile Include="src\lib\SimpleFileWatcher\FileWatcher.cpp" />
     <ClCompile Include="src\lib\SimpleFileWatcher\FileWatcherWin32.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="include\Util\StringUtils.h" />
     <ClInclude Include="include\Graphics\Shaders\VertexShader.h" />
     <ClInclude Include="include\Graphics\Shaders\PixelShader.h" />
+    <ClInclude Include="SpriteShader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\sprites\animations\dog_grey_walk_up.anim" />

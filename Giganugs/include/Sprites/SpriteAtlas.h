@@ -21,6 +21,8 @@ namespace Giganugs::Sprites {
 		SpriteAtlas(int ID, std::string_view filename, Microsoft::WRL::ComPtr<ID3D11Device> device);
 		~SpriteAtlas();
 
-		int32_t indexOf(const std::string& spriteName);
+		int32_t indexOf(const std::string& spriteName) const;
+
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture() const;
 	};
 }

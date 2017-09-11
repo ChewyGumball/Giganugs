@@ -13,5 +13,7 @@ namespace Giganugs::Graphics {
 		~PixelShader();
 
 		void Set(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
+
+		void SetTexture(int32_t slot, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture, Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
 	};
 }

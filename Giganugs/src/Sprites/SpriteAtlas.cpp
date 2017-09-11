@@ -37,7 +37,7 @@ namespace Giganugs::Sprites {
 		}
 
 		int width, height, channels;
-		const uint8_t* data = stbi_load(imageFilename.c_str(), &width, &height, &channels, 0);
+		uint8_t* data = stbi_load(imageFilename.c_str(), &width, &height, &channels, 0);
 
 		D3D11_SUBRESOURCE_DATA imageData;
 		imageData.pSysMem = data;
@@ -49,12 +49,14 @@ namespace Giganugs::Sprites {
 		textureDescription.Height = height;
 		textureDescription.MipLevels = 1;
 		textureDescription.ArraySize = 1;
-		textureDescription.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		textureDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		textureDescription.SampleDesc.Count = 1;
 		textureDescription.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
 		ComPtr<ID3D11Texture2D> texture;
 		device->CreateTexture2D(&textureDescription, &imageData, &texture);
+
+		stbi_image_free(data);
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC viewDescription = {};
 		viewDescription.Format = textureDescription.Format;
@@ -69,8 +71,12 @@ namespace Giganugs::Sprites {
 	{
 	}
 
-	int32_t SpriteAtlas::indexOf(const std::string& spriteName)
+	int32_t SpriteAtlas::indexOf(const std::string& spriteName) const
 	{
 		return namesToIndices.at(spriteName);
+	}
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> SpriteAtlas::texture() const
+	{
+		return textureView;
 	}
 }
