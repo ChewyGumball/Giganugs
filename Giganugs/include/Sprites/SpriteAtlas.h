@@ -23,6 +23,8 @@ namespace Giganugs::Sprites {
 
 		int32_t indexOf(const std::string& spriteName) const;
 
+		SpriteAtlasPart part(uint32_t index);
+
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture() const;
 	};
 }

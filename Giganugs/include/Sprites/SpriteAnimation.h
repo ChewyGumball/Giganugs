@@ -7,9 +7,9 @@ namespace Giganugs::Sprites {
 	class SpriteAnimation
 	{
 		float secondsPerFrame;
-		std::vector<uint32_t> frames;
 
 	public:
+		std::vector<uint32_t> frames;
 
 		SpriteAnimation(std::string_view filename, SpriteAtlas* atlas);
 		~SpriteAnimation();

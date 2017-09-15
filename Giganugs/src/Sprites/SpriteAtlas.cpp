@@ -32,7 +32,7 @@ namespace Giganugs::Sprites {
 				float height = Util::String::svtof(line[4]);
 
 				namesToIndices[std::string(line[0])] = i - 1;
-				parts.push_back({ x, y, width, height });
+				parts.push_back({ x / imageWidth, y / imageHeight, width / imageWidth, height / imageHeight });
 			}
 		}
 
@@ -74,6 +74,10 @@ namespace Giganugs::Sprites {
 	int32_t SpriteAtlas::indexOf(const std::string& spriteName) const
 	{
 		return namesToIndices.at(spriteName);
+	}
+	SpriteAtlasPart SpriteAtlas::part(uint32_t index)
+	{
+		return parts[index];
 	}
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> SpriteAtlas::texture() const
 	{

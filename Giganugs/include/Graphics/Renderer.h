@@ -4,8 +4,9 @@
 #include <dxgi1_4.h>
 #include <wrl.h>
 
-#include "Graphics/Shaders/VertexShader.h"
-#include "Graphics/Shaders/PixelShader.h"
+#include <vector>
+
+#include "Graphics/Shaders/SpriteShader.h"
 
 #include "Sprites/SpriteAtlas.h"
 
@@ -22,22 +23,24 @@ namespace Giganugs::Graphics {
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> backBuffer;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> defaultSampler;
 
-		VertexShader* vertexShader;
-		PixelShader* pixelShader;
+		SpriteShader* spriteShader;
 
-		VertexBuffer* vertexBuffer;
+
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> vertexBufferLayout;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> cameraBuffer;
 
 		D3D_FEATURE_LEVEL featureLevel;
 		
 	public:
+
 		Renderer(const Window* const window);
 		~Renderer();
 		Microsoft::WRL::ComPtr<ID3D11Device> getDevice();
 
 		void setTexture(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture);
+		void setBatch(std::vector<Giganugs::Sprites::SpriteInstanceData>& parts);
 
-		void Draw();
+		void Draw(uint32_t instanceCount);
 		void Clear();
 		void Swap();
 	};

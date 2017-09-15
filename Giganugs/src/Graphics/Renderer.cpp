@@ -4,10 +4,12 @@
 #include "Graphics/VertexBuffer.h"
 
 
-#include <DirectXMath.h>
+//#include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 #include <d3dcompiler.h>
 
+#include "lib/glm/glm.hpp"
+#include "lib/glm/gtc/matrix_transform.hpp"
 
 using Microsoft::WRL::ComPtr;
 
@@ -49,28 +51,10 @@ namespace Giganugs::Graphics {
 		viewport.Width = static_cast<float>(window->Width());
 		viewport.Height = static_cast<float>(window->Height());
 		context->RSSetViewports(1, &viewport);
-
-		VertexBufferDefinition bufferDefinition(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, {
-			{ VertexSemantic::POSITION, DXGI_FORMAT_R32G32B32_FLOAT },
-			{ VertexSemantic::TEXCOORD, DXGI_FORMAT_R32G32_FLOAT }
-		});
-
-		vertexShader = new VertexShader(L"resources/shaders/sprite.hlsl", "vertexShader", bufferDefinition, device);
-		pixelShader = new PixelShader(L"resources/shaders/sprite.hlsl", "pixelShader", device);
-
-		vertexShader->Set(context);
-		pixelShader->Set(context);
 		
-		std::vector<float> vertexData = {
-			-0.5, -0.5, 0,    0, 0,
-			-0.5,  0.5, 0,    0, 1,
-			 0.5, -0.5, 0,    1, 0,
-			 0.5,  0.5, 0,    1, 1
-		};
-
-		vertexBuffer = new VertexBuffer(bufferDefinition, vertexData, context, device);
-		vertexBuffer->Set(context);
-
+		spriteShader = new SpriteShader(device);
+		spriteShader->Set(context);
+		
 		D3D11_SAMPLER_DESC samplerDescription = {};
 		samplerDescription.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 		samplerDescription.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -78,16 +62,32 @@ namespace Giganugs::Graphics {
 		samplerDescription.MinLOD = 0;
 		samplerDescription.MaxLOD = D3D11_FLOAT32_MAX;
 
+		device->CreateSamplerState(&samplerDescription, &defaultSampler); 
+		
+		D3D11_BUFFER_DESC cameraBufferDescription = {};
 
-		device->CreateSamplerState(&samplerDescription, &defaultSampler);
+		cameraBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+		cameraBufferDescription.ByteWidth = sizeof(glm::mat4x4);
+		cameraBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cameraBufferDescription.CPUAccessFlags = 0;
+		cameraBufferDescription.MiscFlags = 0;
+
+		glm::mat4x4 projection = glm::ortho(-25, 25, -25, 25);
+		glm::mat4x4 lookat = glm::lookAt(glm::vec3(0, 0, -5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+		glm::mat4x4 camera = projection * lookat;
+		D3D11_SUBRESOURCE_DATA cameraData = {};
+		cameraData.pSysMem = &camera;
+
+		if (FAILED(device->CreateBuffer(&cameraBufferDescription, &cameraData, &cameraBuffer))) {
+			MessageBox(window->handle(), L"Failed to make camera buffer", L"FAIL", 0);
+		}
+		context->VSSetConstantBuffers(0, 1, cameraBuffer.GetAddressOf());
 	}
 
 
 	Renderer::~Renderer()
 	{
-		delete vertexBuffer;
-		delete vertexShader;
-		delete pixelShader;
+		delete spriteShader;
 	}
 
 	Microsoft::WRL::ComPtr<ID3D11Device> Renderer::getDevice()
@@ -97,12 +97,18 @@ namespace Giganugs::Graphics {
 
 	void Renderer::setTexture(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture)
 	{
-		pixelShader->SetTexture(0, texture, defaultSampler, context);
+		context->PSSetShaderResources(0, 1, texture.GetAddressOf());
+		context->PSSetSamplers(0, 1, defaultSampler.GetAddressOf());
 	}
 
-	void Renderer::Draw()
+	void Renderer::setBatch(std::vector<Giganugs::Sprites::SpriteInstanceData>& parts)
 	{
-		context->Draw(4, 0);
+		spriteShader->setBatch(parts, context);
+	}
+
+	void Renderer::Draw(uint32_t instanceCount)
+	{
+		context->DrawInstanced(4, instanceCount, 0, 0);
 	}
 
 	void Renderer::Clear()

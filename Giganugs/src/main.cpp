@@ -21,6 +21,18 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	renderer.setTexture(atlas.texture());
 
+	uint32_t timer = 0;
+	uint32_t currentFrame = 0;
+
+	std::vector<Giganugs::Sprites::SpriteInstanceData> parts;
+	parts.push_back({ 0, 0, 0, atlas.part(greyUp.frames[currentFrame]) });
+	parts.push_back({ -1, -1, 0, atlas.part(3) });
+	parts.push_back({ -1, 0, 0, atlas.part(14) });
+	parts.push_back({ 0, -1, 0, atlas.part(24) });
+
+	renderer.setBatch(parts);
+
+
 	MSG message;
 	bool running = true;
 	while (running) {
@@ -31,8 +43,14 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			running = message.message != WM_QUIT;
 		}
 		else {
+			timer++;
+			if (timer % 100 == 0) {
+				currentFrame = (currentFrame + 1) % greyUp.frames.size();
+				parts[0].atlasData = atlas.part(greyUp.frames[currentFrame]);
+				renderer.setBatch(parts);
+			}
 			renderer.Clear();
-			renderer.Draw();
+			renderer.Draw(parts.size());
 			renderer.Swap();
 		}
 	}

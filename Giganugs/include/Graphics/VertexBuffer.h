@@ -16,9 +16,13 @@ namespace Giganugs::Graphics {
 	public:
 		const VertexBufferDefinition definition;
 
-		VertexBuffer(VertexBufferDefinition definition, std::vector<float> &data, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context, Microsoft::WRL::ComPtr<ID3D11Device> device);
+		VertexBuffer(VertexBufferDefinition definition, uint32_t elementCount, Microsoft::WRL::ComPtr<ID3D11Device> device);
+		VertexBuffer(VertexBufferDefinition definition, std::vector<float> &data, Microsoft::WRL::ComPtr<ID3D11Device> device);
 		~VertexBuffer();
 
-		void Set(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
+		D3D11_MAPPED_SUBRESOURCE Map(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
+		void Unmap(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
+
+		void Set(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context, uint32_t slot);
 	};
 }

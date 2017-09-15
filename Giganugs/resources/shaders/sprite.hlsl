@@ -2,9 +2,14 @@
 Texture2D spriteTexture : register(t0);
 sampler spriteSampler : register(s0);
 
+cbuffer Camera : register(b0) {
+	float4x4 viewProjection;
+};
+
 struct Vertex {
-	float4 position: POSITION;
-	float2 textureCoordinates: TEXCOORD;
+	float2 basePosition: POSITION0;
+	float3 position: POSITION1;
+	float4 spriteDetails: TEXCOORD;
 };
 
 struct Pixel {
@@ -16,12 +21,17 @@ Pixel vertexShader(Vertex vertex)
 {
 	Pixel output;
 
-	output.position = vertex.position;
-	output.textureCoordinates = vertex.textureCoordinates;
+	float4 position = float4(vertex.position.xy + vertex.basePosition, vertex.position.z, 1);
+
+	output.position = position;// mul(viewProjection, float4(vertex.position, 1));
+	output.textureCoordinates = float2(vertex.spriteDetails.x + vertex.spriteDetails.z * vertex.basePosition.x, vertex.spriteDetails.y + vertex.spriteDetails.w * vertex.basePosition.y);
 
 	return output;
 }
 
 float4 pixelShader(Pixel pixel) : SV_TARGET {
-	return spriteTexture.Sample(spriteSampler, pixel.textureCoordinates);
+	float4 colour = spriteTexture.Sample(spriteSampler, pixel.textureCoordinates);
+	if (colour.a < 0.01) discard;
+
+	return colour;
 }

@@ -8,7 +8,14 @@ namespace Giganugs::Graphics {
 
 	enum VertexSemantic {
 		POSITION,
-		TEXCOORD
+		TEXCOORD,
+	};
+
+	struct InputElement : public D3D11_INPUT_ELEMENT_DESC {
+		InputElement(VertexSemantic semantic, DXGI_FORMAT format);
+		InputElement(VertexSemantic semantic, uint32_t index, DXGI_FORMAT format);
+		InputElement(VertexSemantic semantic, uint32_t index, D3D11_INPUT_CLASSIFICATION type, DXGI_FORMAT format);
+		InputElement(VertexSemantic semantic, uint32_t index, D3D11_INPUT_CLASSIFICATION type, DXGI_FORMAT format, uint32_t slot);
 	};
 
 	class VertexBufferDefinition
@@ -16,18 +23,18 @@ namespace Giganugs::Graphics {
 	private:
 		
 		D3D11_PRIMITIVE_TOPOLOGY topology;
-		std::vector<D3D11_INPUT_ELEMENT_DESC> elements;
+		std::vector<InputElement> elements;
 		uint32_t bufferSize;
 
 	public:
-		VertexBufferDefinition(D3D11_PRIMITIVE_TOPOLOGY topology, std::vector<std::pair<VertexSemantic, DXGI_FORMAT>> elements);
+		VertexBufferDefinition(D3D11_PRIMITIVE_TOPOLOGY topology, std::vector<InputElement> elements);
 		~VertexBufferDefinition();
-
-		void addElement(VertexSemantic semantic, DXGI_FORMAT format);
-
+		
 		uint32_t size() const;
 		D3D11_PRIMITIVE_TOPOLOGY primitiveTopology() const;
 
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> createLayout(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3DBlob> shaderCode) const;
+
+		VertexBufferDefinition operator+(const VertexBufferDefinition& other) const;
 	};
 }
