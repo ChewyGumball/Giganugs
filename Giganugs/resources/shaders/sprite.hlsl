@@ -23,8 +23,8 @@ Pixel vertexShader(Vertex vertex)
 
 	float4 position = float4(vertex.position.xy + vertex.basePosition, vertex.position.z, 1);
 
-	output.position = position;// mul(viewProjection, float4(vertex.position, 1));
-	output.textureCoordinates = float2(vertex.spriteDetails.x + vertex.spriteDetails.z * vertex.basePosition.x, vertex.spriteDetails.y + vertex.spriteDetails.w * vertex.basePosition.y);
+	output.position = mul(viewProjection, position);
+	output.textureCoordinates = float2(vertex.spriteDetails.x + vertex.spriteDetails.z * vertex.basePosition.x, vertex.spriteDetails.y + vertex.spriteDetails.w * (1 - vertex.basePosition.y));
 
 	return output;
 }

@@ -7,10 +7,10 @@ using Microsoft::WRL::ComPtr;
 
 namespace {
 	std::vector<float> vertexes = {
-		0, 0,  
+		0, 0,
 		0, 1, 
 		1, 0, 
-		1, 1
+		1, 1 
 	};
 }
 

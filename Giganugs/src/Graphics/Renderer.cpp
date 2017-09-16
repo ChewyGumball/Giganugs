@@ -8,6 +8,8 @@
 #include <DirectXPackedVector.h>
 #include <d3dcompiler.h>
 
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+
 #include "lib/glm/glm.hpp"
 #include "lib/glm/gtc/matrix_transform.hpp"
 
@@ -72,11 +74,9 @@ namespace Giganugs::Graphics {
 		cameraBufferDescription.CPUAccessFlags = 0;
 		cameraBufferDescription.MiscFlags = 0;
 
-		glm::mat4x4 projection = glm::ortho(-25, 25, -25, 25);
-		glm::mat4x4 lookat = glm::lookAt(glm::vec3(0, 0, -5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-		glm::mat4x4 camera = projection * lookat;
+		glm::mat4x4 projection = glm::ortho(0.f, 10.f, 0.f, 10.f, 0.f, 1.f);
 		D3D11_SUBRESOURCE_DATA cameraData = {};
-		cameraData.pSysMem = &camera;
+		cameraData.pSysMem = &projection;
 
 		if (FAILED(device->CreateBuffer(&cameraBufferDescription, &cameraData, &cameraBuffer))) {
 			MessageBox(window->handle(), L"Failed to make camera buffer", L"FAIL", 0);

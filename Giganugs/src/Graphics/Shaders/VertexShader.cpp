@@ -9,7 +9,7 @@ namespace Giganugs::Graphics {
 	VertexShader::VertexShader(const std::wstring& filename, const std::string& entryPoint, const VertexBufferDefinition& definition, Microsoft::WRL::ComPtr<ID3D11Device> device)
 	{
 		ComPtr<ID3DBlob> shaderCode, errors;
-		D3DCompileFromFile(filename.c_str(), nullptr, nullptr, entryPoint.c_str(), "vs_4_0", 0, 0, &shaderCode, &errors);
+		D3DCompileFromFile(filename.c_str(), nullptr, nullptr, entryPoint.c_str(), "vs_4_0", D3DCOMPILE_DEBUG, 0, &shaderCode, &errors);
 
 		if (errors) {
 			std::string error((char*)(errors->GetBufferPointer()), errors->GetBufferSize());
