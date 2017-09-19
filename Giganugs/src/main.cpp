@@ -1,6 +1,8 @@
 #include <windows.h>
 #include <DirectXMath.h>
 
+#include <chrono>
+
 #include "Graphics/Window.h"
 #include "Graphics/Renderer.h"
 
@@ -35,6 +37,11 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	renderer.setBatch(parts);
 
+	std::chrono::high_resolution_clock clock;
+	
+	auto previousTime = clock.now();
+
+	float speed = 1.5;
 
 	MSG message;
 	bool running = true;
@@ -46,17 +53,35 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			running = message.message != WM_QUIT;
 		}
 		else {
+			auto currentTime = clock.now();
+			std::chrono::duration<float> timeDelta = currentTime - previousTime;
+			previousTime = currentTime;
+
 			timer++;
+			bool updateBatch = false;
 			if (timer % 1000 == 0) {
 				currentFrame = (currentFrame + 1) % brownDown.frames.size();
 				parts[0].atlasData = atlas.part(brownDown.frames[currentFrame]);
 				parts[1].atlasData = atlas.part(greyDown.frames[currentFrame]);
-				parts[1].y += 0.02;
 				parts[2].atlasData = atlas.part(tanRight.frames[currentFrame]);
-				parts[2].x += 0.02;
 				parts[3].atlasData = atlas.part(shiftLeft.frames[currentFrame]);
+
+				updateBatch = true;
+			}
+
+			if (window.keyboard()[Giganugs::Input::Key::D] == Giganugs::Input::InputState::Pressed) {
+				parts[2].x += speed * timeDelta.count();
+				updateBatch = true;
+			}
+			if (window.keyboard()[Giganugs::Input::Key::W] == Giganugs::Input::InputState::Pressed) {
+				parts[1].y += speed * timeDelta.count();
+				updateBatch = true;
+			}
+
+			if (updateBatch) {
 				renderer.setBatch(parts);
 			}
+
 			renderer.Clear();
 			renderer.Draw(parts.size());
 			renderer.Swap();

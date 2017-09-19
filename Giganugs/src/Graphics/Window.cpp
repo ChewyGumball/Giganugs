@@ -28,12 +28,34 @@ namespace {
 	
 	using Giganugs::Input::MouseButton;
 	using Giganugs::Input::InputState;
+	using Giganugs::Input::Key;
 
 	void processKeyDown(WPARAM wparam, Giganugs::Input::KeyboardState& keyboard) {
+		switch (wparam) {
+		case 0x30: // 0
+			keyboard.setKeyState(Key::Zero, InputState::Pressed);
+			break;
+		case 0x44: // d
+			keyboard.setKeyState(Key::D, InputState::Pressed);
+			break;
+		case 0x57: // w
+			keyboard.setKeyState(Key::W, InputState::Pressed);
+			break;
+		}
 	}
 
 	void processKeyUp(WPARAM wparam, Giganugs::Input::KeyboardState& keyboard) {
-
+		switch (wparam) {
+		case 0x30: // 0
+			keyboard.setKeyState(Key::Zero, InputState::Released);
+			break;
+		case 0x44: // d
+			keyboard.setKeyState(Key::D, InputState::Released);
+			break;
+		case 0x57: // w
+			keyboard.setKeyState(Key::W, InputState::Released);
+			break;
+		}
 	}
 
 	void processMouseButton(WPARAM wparam, Giganugs::Input::MouseState& mouse, Giganugs::Input::InputState state) {
@@ -62,6 +84,13 @@ namespace {
 		switch (wparam) {
 		case 0x30:
 			keyboard.setKeyState(Key::Zero, state);
+			break;
+		case 0x44:
+			keyboard.setKeyState(Key::D, state);
+			break;
+		case 0x57:
+			keyboard.setKeyState(Key::W, state);
+			break;
 		}
 	}
 	
@@ -71,11 +100,29 @@ namespace Giganugs::Graphics {
 
 
 	LRESULT Window::MessagePump(UINT message, WPARAM wparam, LPARAM lparam)
-	{
-		
+	{		
 		switch (message) {
+		case WM_LBUTTONDOWN:
+			processMouseButton(wparam, mouseState, InputState::Pressed);
+			break;
+		case WM_LBUTTONUP:
+			processMouseButton(wparam, mouseState, InputState::Released);
+			break;
+		case WM_RBUTTONDOWN:
+			processMouseButton(wparam, mouseState, InputState::Pressed);
+			break;
+		case WM_RBUTTONUP:
+			processMouseButton(wparam, mouseState, InputState::Released);
+			break;
+		case WM_MBUTTONDOWN:
+			processMouseButton(wparam, mouseState, InputState::Pressed);
+			break;
+		case WM_MBUTTONUP:
+			processMouseButton(wparam, mouseState, InputState::Released);
+			break;
 		case WM_MOUSEMOVE:
 			processMouseMove(lparam, mouseState, height);
+			break;
 		case WM_KEYDOWN:
 			processKeyDown(wparam, keyboardState);
 			break;
