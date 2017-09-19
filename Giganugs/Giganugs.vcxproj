@@ -23,6 +23,8 @@
     <ClCompile Include="include\lib\glm\detail\glm.cpp" />
     <ClCompile Include="src\Graphics\Shaders\SpriteShader.cpp" />
     <ClCompile Include="src\Graphics\Shaders\PixelShader.cpp" />
+    <ClCompile Include="src\Input\KeyboardState.cpp" />
+    <ClCompile Include="src\Input\MouseState.cpp" />
     <ClCompile Include="src\lib\SimpleFileWatcher\FileWatcher.cpp" />
     <ClCompile Include="src\lib\SimpleFileWatcher\FileWatcherWin32.cpp" />
     <ClCompile Include="src\Sprites\SpriteAnimation.cpp" />
@@ -44,6 +46,9 @@
     <ClInclude Include="include\Graphics\Window.h" />
     <ClInclude Include="include\Graphics\VertexBufferDefinition.h" />
     <ClInclude Include="include\Graphics\VertexBuffer.h" />
+    <ClInclude Include="include\Input\InputState.h" />
+    <ClInclude Include="include\Input\KeyboardState.h" />
+    <ClInclude Include="include\Input\MouseState.h" />
     <ClInclude Include="include\lib\glm\common.hpp" />
     <ClInclude Include="include\lib\glm\detail\func_common.hpp" />
     <ClInclude Include="include\lib\glm\detail\func_exponential.hpp" />
@@ -418,7 +423,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions);GLM_FORCE_DEPTH_ZERO_TO_ONE</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -454,7 +459,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions);GLM_FORCE_DEPTH_ZERO_TO_ONE</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>

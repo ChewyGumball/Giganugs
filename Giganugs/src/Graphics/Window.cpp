@@ -25,6 +25,46 @@ namespace {
 
 		return 0;
 	}
+	
+	using Giganugs::Input::MouseButton;
+	using Giganugs::Input::InputState;
+
+	void processKeyDown(WPARAM wparam, Giganugs::Input::KeyboardState& keyboard) {
+	}
+
+	void processKeyUp(WPARAM wparam, Giganugs::Input::KeyboardState& keyboard) {
+
+	}
+
+	void processMouseButton(WPARAM wparam, Giganugs::Input::MouseState& mouse, Giganugs::Input::InputState state) {
+		switch (wparam) {
+		case VK_LBUTTON:
+			mouse.setButtonState(MouseButton::Left, state);
+			break;
+		case VK_RBUTTON:
+			mouse.setButtonState(MouseButton::Right, state);
+			break;
+		case VK_MBUTTON:
+			mouse.setButtonState(MouseButton::Middle, state);
+			break;
+		}
+	}
+
+	void processMouseMove(LPARAM lparam, Giganugs::Input::MouseState& mouse, int windowHeight) {
+		int x = lparam & 0xFFFF;
+		int y = windowHeight - ((lparam & 0xFFFF0000) >> 16);
+		mouse.setPosition(x, y);
+	}
+
+	using Giganugs::Input::Key;
+	void processChar(WPARAM wparam, LPARAM lparam, Giganugs::Input::KeyboardState& keyboard) {
+		InputState state = (lparam & 0x80000000) == 0 ? InputState::Pressed : InputState::Released;
+		switch (wparam) {
+		case 0x30:
+			keyboard.setKeyState(Key::Zero, state);
+		}
+	}
+	
 }
 
 namespace Giganugs::Graphics {
@@ -32,6 +72,22 @@ namespace Giganugs::Graphics {
 
 	LRESULT Window::MessagePump(UINT message, WPARAM wparam, LPARAM lparam)
 	{
+		
+		switch (message) {
+		case WM_MOUSEMOVE:
+			processMouseMove(lparam, mouseState, height);
+		case WM_KEYDOWN:
+			processKeyDown(wparam, keyboardState);
+			break;
+		case WM_KEYUP:
+			processKeyUp(wparam, keyboardState);
+			break;
+		case WM_CHAR:
+			processChar(wparam, lparam, keyboardState);
+			break;
+		//default:
+		}
+		
 		return DefWindowProc(windowHandle, message, wparam, lparam);
 	}
 
@@ -49,6 +105,17 @@ namespace Giganugs::Graphics {
 	{
 		return height;
 	}
+	
+	const Input::KeyboardState & Window::keyboard() const
+	{
+		return keyboardState;
+	}
+
+	const Input::MouseState & Window::mouse() const
+	{
+		return mouseState;
+	}
+	
 
 	Window::Window(int width, int height, const std::wstring& windowName, int showState)
 		: instance(GetModuleHandle(nullptr)), applicationName(windowName), width(width), height(height)

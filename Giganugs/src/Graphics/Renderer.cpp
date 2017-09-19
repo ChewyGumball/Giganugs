@@ -8,7 +8,6 @@
 #include <DirectXPackedVector.h>
 #include <d3dcompiler.h>
 
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 
 #include "lib/glm/glm.hpp"
 #include "lib/glm/gtc/matrix_transform.hpp"

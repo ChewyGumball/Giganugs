@@ -25,8 +25,6 @@ namespace Giganugs::Graphics {
 
 		SpriteShader* spriteShader;
 
-
-		Microsoft::WRL::ComPtr<ID3D11InputLayout> vertexBufferLayout;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> cameraBuffer;
 
 		D3D_FEATURE_LEVEL featureLevel;
