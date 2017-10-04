@@ -18,7 +18,7 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	Giganugs::Graphics::Window window(400, 400, L"HELPS!", nCmdShow);
 	Giganugs::Graphics::Renderer renderer(&window);
 
-	Giganugs::Sprites::SpriteAtlas atlas(0, "resources/sprites/atlases/sprites.atlas", renderer.getDevice());
+	Giganugs::Sprites::SpriteAtlas atlas(0, "resources/sprites/atlases/dogs.atlas", renderer.getDevice());
 	Giganugs::Sprites::SpriteAnimation brownDown("resources/sprites/animations/dog_brown_walk_down.anim", &atlas);
 	Giganugs::Sprites::SpriteAnimation greyDown("resources/sprites/animations/dog_grey_walk_up.anim", &atlas);
 	Giganugs::Sprites::SpriteAnimation tanRight("resources/sprites/animations/dog_tan_walk_right.anim", &atlas);
@@ -30,10 +30,10 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	uint32_t currentFrame = 0;
 
 	std::vector<Giganugs::Sprites::SpriteInstanceData> parts;
-	parts.push_back({ 0, 0, 0, atlas.part(brownDown.frames[currentFrame]) });
-	parts.push_back({ 1, 1, 0, atlas.part(greyDown.frames[currentFrame]) });
-	parts.push_back({ 1, 0, 0, atlas.part(tanRight.frames[currentFrame]) });
-	parts.push_back({ 0, 1, 0, atlas.part(shiftLeft.frames[currentFrame]) });
+	parts.push_back({ 0, 0, 1, 1, atlas.part(brownDown.frames[currentFrame]) });
+	parts.push_back({ 1, 1, 1, 1, atlas.part(greyDown.frames[currentFrame]) });
+	parts.push_back({ 1, 0, 1, 1, atlas.part(tanRight.frames[currentFrame]) });
+	parts.push_back({ 0, 1, 1, 1, atlas.part(shiftLeft.frames[currentFrame]) });
 
 	renderer.setBatch(parts);
 

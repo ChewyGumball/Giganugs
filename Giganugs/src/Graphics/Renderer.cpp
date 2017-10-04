@@ -73,7 +73,7 @@ namespace Giganugs::Graphics {
 		cameraBufferDescription.CPUAccessFlags = 0;
 		cameraBufferDescription.MiscFlags = 0;
 
-		glm::mat4x4 projection = glm::ortho(0.f, 10.f, 0.f, 10.f, 0.f, 1.f);
+		glm::mat4x4 projection = glm::ortho(0.f, 10.f, 0.f, 10.f, 0.f, 10.f);
 		D3D11_SUBRESOURCE_DATA cameraData = {};
 		cameraData.pSysMem = &projection;
 

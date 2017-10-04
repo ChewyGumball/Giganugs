@@ -21,7 +21,7 @@ namespace Giganugs::Graphics {
 			{ Giganugs::Graphics::VertexSemantic::POSITION, 0, DXGI_FORMAT_R32G32_FLOAT }
 		}), vertexes, device),
 		batchData(VertexBufferDefinition(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, {
-			{ Giganugs::Graphics::VertexSemantic::POSITION, 1, D3D11_INPUT_PER_INSTANCE_DATA, DXGI_FORMAT_R32G32B32_FLOAT, 1 },
+			{ Giganugs::Graphics::VertexSemantic::POSITION, 1, D3D11_INPUT_PER_INSTANCE_DATA, DXGI_FORMAT_R32G32B32A32_FLOAT, 1 },
 			{ Giganugs::Graphics::VertexSemantic::TEXCOORD, 0, D3D11_INPUT_PER_INSTANCE_DATA, DXGI_FORMAT_R32G32B32A32_FLOAT, 1 }
 		}), 1000, device),
 		bufferDefinition(vertexData.definition + batchData.definition),

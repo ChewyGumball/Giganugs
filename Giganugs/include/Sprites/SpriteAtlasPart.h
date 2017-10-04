@@ -10,7 +10,7 @@ namespace Giganugs::Sprites {
 	};
 
 	struct SpriteInstanceData {
-		float x, y, z;
+		float x, y, width, height;
 		SpriteAtlasPart atlasData;
 	};
 }
