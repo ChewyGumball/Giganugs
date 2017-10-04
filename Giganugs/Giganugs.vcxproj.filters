@@ -914,9 +914,21 @@
     <None Include="include\lib\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="resources\sprites\atlases\counters.atlas" />
+    <None Include="resources\sprites\atlases\dogs.atlas" />
+    <None Include="resources\sprites\atlases\wood_floors.atlas" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\sprites\images\sprites.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\sprites\images\counters.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\sprites\images\dogs.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\sprites\images\wood_floors.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

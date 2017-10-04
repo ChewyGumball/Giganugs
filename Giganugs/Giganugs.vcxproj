@@ -320,7 +320,10 @@
     <None Include="include\lib\glm\gtx\vector_query.inl" />
     <None Include="include\lib\glm\gtx\wrap.inl" />
     <None Include="resources\sprites\animations\dog_grey_walk_up.anim" />
+    <None Include="resources\sprites\atlases\counters.atlas" />
+    <None Include="resources\sprites\atlases\dogs.atlas" />
     <None Include="resources\sprites\atlases\sprites.atlas" />
+    <None Include="resources\sprites\atlases\wood_floors.atlas" />
     <None Include="shaders\sprite.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -330,7 +333,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="resources\sprites\images\counters.png" />
+    <Image Include="resources\sprites\images\dogs.png" />
     <Image Include="resources\sprites\images\sprites.png" />
+    <Image Include="resources\sprites\images\wood_floors.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\sprite.hlsl">

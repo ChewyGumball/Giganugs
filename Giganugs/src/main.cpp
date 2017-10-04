@@ -6,6 +6,7 @@
 #include "Graphics/Window.h"
 #include "Graphics/Renderer.h"
 
+#include "Sprites/SpriteMap.h"
 #include "Sprites/SpriteAtlas.h"
 #include "Sprites/SpriteAnimation.h"
 
@@ -19,12 +20,20 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	Giganugs::Graphics::Renderer renderer(&window);
 
 	Giganugs::Sprites::SpriteAtlas atlas(0, "resources/sprites/atlases/dogs.atlas", renderer.getDevice());
+	Giganugs::Sprites::SpriteAtlas floors(0, "resources/sprites/atlases/wood_floors.atlas", renderer.getDevice());
+
 	Giganugs::Sprites::SpriteAnimation brownDown("resources/sprites/animations/dog_brown_walk_down.anim", &atlas);
 	Giganugs::Sprites::SpriteAnimation greyDown("resources/sprites/animations/dog_grey_walk_up.anim", &atlas);
 	Giganugs::Sprites::SpriteAnimation tanRight("resources/sprites/animations/dog_tan_walk_right.anim", &atlas);
 	Giganugs::Sprites::SpriteAnimation shiftLeft("resources/sprites/animations/dog_shirt_walk_left.anim", &atlas);
 
-	renderer.setTexture(atlas.texture());
+	Giganugs::Sprites::SpriteMap map(4, 4, &floors);
+	for (int x = 0; x < 4; x++) {
+		for (int y = 0; y < 4; y++) {
+			map.set(x, y, 0);
+		}
+	}
+
 
 	uint32_t timer = 0;
 	uint32_t currentFrame = 0;
@@ -58,6 +67,7 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			previousTime = currentTime;
 
 			timer++;
+
 			bool updateBatch = false;
 			if (timer % 1000 == 0) {
 				currentFrame = (currentFrame + 1) % brownDown.frames.size();
@@ -65,25 +75,26 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 				parts[1].atlasData = atlas.part(greyDown.frames[currentFrame]);
 				parts[2].atlasData = atlas.part(tanRight.frames[currentFrame]);
 				parts[3].atlasData = atlas.part(shiftLeft.frames[currentFrame]);
-
-				updateBatch = true;
 			}
 
 			if (window.keyboard()[Giganugs::Input::Key::D] == Giganugs::Input::InputState::Pressed) {
 				parts[2].x += speed * timeDelta.count();
-				updateBatch = true;
 			}
 			if (window.keyboard()[Giganugs::Input::Key::W] == Giganugs::Input::InputState::Pressed) {
 				parts[1].y += speed * timeDelta.count();
-				updateBatch = true;
-			}
-
-			if (updateBatch) {
-				renderer.setBatch(parts);
 			}
 
 			renderer.Clear();
+
+			renderer.setTexture(floors.texture());
+			auto batch = map.spritesInView(-1, -1, 3, 3);
+			renderer.setBatch(batch);
+			renderer.Draw(batch.size());
+
+			renderer.setTexture(atlas.texture());
+			renderer.setBatch(parts);
 			renderer.Draw(parts.size());
+
 			renderer.Swap();
 		}
 	}

@@ -3,8 +3,8 @@
 
 namespace Giganugs::Sprites {
 
-	SpriteMap::SpriteMap(int width, int height)
-		:width(width), height(height), sprites(width * height)
+	SpriteMap::SpriteMap(int width, int height, SpriteAtlas* atlas)
+		:m_width(width), m_height(height), atlas(atlas), sprites(width * height)
 	{
 	}
 
@@ -13,29 +13,35 @@ namespace Giganugs::Sprites {
 	{
 	}
 
-	void SpriteMap::set(Sprite sprite)
+	void SpriteMap::set(int32_t x, int32_t y, uint32_t spriteIndex)
 	{
-		int x = static_cast<int>(std::floorf(sprite.x));
-		int y = static_cast<int>(std::floorf(sprite.y));
-		sprites[x * width + y] = sprite;
+		sprites[x * m_width + y] = { (float)x, (float)y, 1, 1, atlas->part(spriteIndex) };
 	}
 
 
-	std::vector<Sprite*> SpriteMap::spritesInView(float viewX, float viewY, float viewWidth, float viewHeight)
+	std::vector<SpriteInstanceData> SpriteMap::spritesInView(float viewX, float viewY, float viewWidth, float viewHeight)
 	{
-		uint32_t startX = static_cast<uint32_t>(std::floorf(viewX));
-		uint32_t startY = static_cast<uint32_t>(std::floorf(viewY));
-		uint32_t endX = static_cast<uint32_t>(std::ceilf(viewWidth));
-		uint32_t endY = static_cast<uint32_t>(std::ceilf(viewHeight));
+		uint32_t startX = static_cast<uint32_t>(std::clamp(std::floorf(viewX), 0.f, static_cast<float>(m_width)));
+		uint32_t startY = static_cast<uint32_t>(std::clamp(std::floorf(viewY), 0.f, static_cast<float>(m_height)));
+		uint32_t endX = static_cast<uint32_t>(std::clamp(std::ceilf(viewWidth), 0.f, static_cast<float>(m_width)));
+		uint32_t endY = static_cast<uint32_t>(std::clamp(std::ceilf(viewHeight), 0.f, static_cast<float>(m_height)));
 
-		std::vector<Sprite*> visibleSprites;
+		std::vector<SpriteInstanceData> visibleSprites;
 
 		for (uint32_t row = startX; row < endX; row++) {
 			for (uint32_t column = startY; column < endY ; column++) {
-				visibleSprites.push_back(&sprites[row * width + column]);
+				visibleSprites.push_back(sprites[row * m_width + column]);
 			}
 		}
 		
 		return visibleSprites;
+	}
+	int SpriteMap::width() const
+	{
+		return m_width;
+	}
+	int SpriteMap::height() const
+	{
+		return m_height;
 	}
 }
