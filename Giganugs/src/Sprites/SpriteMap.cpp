@@ -15,7 +15,7 @@ namespace Giganugs::Sprites {
 
 	void SpriteMap::set(int32_t x, int32_t y, uint32_t spriteIndex)
 	{
-		sprites[x * m_width + y] = { (float)x, (float)y, 1, 1, atlas->part(spriteIndex) };
+		sprites[x * m_width + y] = { (float)x * 32, (float)y * 32, (float)32, (float)32, atlas->part(spriteIndex) };
 	}
 
 

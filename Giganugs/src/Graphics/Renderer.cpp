@@ -2,6 +2,7 @@
 #include "Graphics/Window.h"
 #include "Graphics/VertexBufferDefinition.h"
 #include "Graphics/VertexBuffer.h"
+#include "Graphics/Camera.h"
 
 
 //#include <DirectXMath.h>
@@ -67,10 +68,10 @@ namespace Giganugs::Graphics {
 		
 		D3D11_BUFFER_DESC cameraBufferDescription = {};
 
-		cameraBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+		cameraBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
 		cameraBufferDescription.ByteWidth = sizeof(glm::mat4x4);
 		cameraBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cameraBufferDescription.CPUAccessFlags = 0;
+		cameraBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		cameraBufferDescription.MiscFlags = 0;
 
 		glm::mat4x4 projection = glm::ortho(0.f, 10.f, 0.f, 10.f, 0.f, 10.f);
@@ -103,6 +104,19 @@ namespace Giganugs::Graphics {
 	void Renderer::setBatch(std::vector<Giganugs::Sprites::SpriteInstanceData>& parts)
 	{
 		spriteShader->setBatch(parts, context);
+	}
+
+	void Renderer::setCamera(const Camera & camera)
+	{
+		D3D11_MAPPED_SUBRESOURCE mapped;
+		if (FAILED(context->Map(cameraBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped))) {
+			MessageBox(nullptr, L"Failed to map camera buffer", L"FAIL", 0);
+		}
+
+		glm::mat4 viewProjection = camera.viewProjection();
+		std::memcpy(mapped.pData, &viewProjection, sizeof(glm::mat4));
+
+		context->Unmap(cameraBuffer.Get(), 0);
 	}
 
 	void Renderer::Draw(uint32_t instanceCount)

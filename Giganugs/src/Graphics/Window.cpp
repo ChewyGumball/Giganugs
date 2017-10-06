@@ -35,8 +35,14 @@ namespace {
 		case 0x30: // 0
 			keyboard.setKeyState(Key::Zero, InputState::Pressed);
 			break;
+		case 0x41: // a
+			keyboard.setKeyState(Key::A, InputState::Pressed);
+			break;
 		case 0x44: // d
 			keyboard.setKeyState(Key::D, InputState::Pressed);
+			break;
+		case 0x53: // s
+			keyboard.setKeyState(Key::S, InputState::Pressed);
 			break;
 		case 0x57: // w
 			keyboard.setKeyState(Key::W, InputState::Pressed);
@@ -49,8 +55,14 @@ namespace {
 		case 0x30: // 0
 			keyboard.setKeyState(Key::Zero, InputState::Released);
 			break;
+		case 0x41: // a
+			keyboard.setKeyState(Key::A, InputState::Released);
+			break;
 		case 0x44: // d
 			keyboard.setKeyState(Key::D, InputState::Released);
+			break;
+		case 0x53: // s
+			keyboard.setKeyState(Key::S, InputState::Released);
 			break;
 		case 0x57: // w
 			keyboard.setKeyState(Key::W, InputState::Released);

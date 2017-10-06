@@ -13,6 +13,7 @@
 namespace Giganugs::Graphics {
 	class Window;
 	class VertexBuffer;
+	class Camera;
 
 	class Renderer
 	{
@@ -37,6 +38,7 @@ namespace Giganugs::Graphics {
 
 		void setTexture(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture);
 		void setBatch(std::vector<Giganugs::Sprites::SpriteInstanceData>& parts);
+		void setCamera(const Camera& camera);
 
 		void Draw(uint32_t instanceCount);
 		void Clear();

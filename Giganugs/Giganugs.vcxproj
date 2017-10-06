@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Graphics\Camera.cpp" />
     <ClCompile Include="include\lib\glm\detail\dummy.cpp" />
     <ClCompile Include="include\lib\glm\detail\glm.cpp" />
     <ClCompile Include="src\Graphics\Shaders\SpriteShader.cpp" />
@@ -42,6 +43,7 @@
     <ClCompile Include="src\Graphics\Shaders\VertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Graphics\Camera.h" />
     <ClInclude Include="include\Graphics\Renderer.h" />
     <ClInclude Include="include\Graphics\Window.h" />
     <ClInclude Include="include\Graphics\VertexBufferDefinition.h" />
