@@ -33,9 +33,9 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	renderer.setCamera(camera);
 
 	Giganugs::Sprites::SpriteMap map(100, 100, &floors);
-	for (int x = 0; x < 4; x++) {
-		for (int y = 0; y < 4; y++) {
-			map.set(x, y, 0);
+	for (int x = 0; x < 100; x++) {
+		for (int y = 0; y < 100; y++) {
+			map.set(x, y, (x / 10) + (y / 10));
 		}
 	}
 
@@ -55,7 +55,7 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	
 	auto previousTime = clock.now();
 
-	float speed = 32;
+	float speed = 128;
 
 	MSG message;
 	bool running = true;
@@ -102,7 +102,10 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			renderer.setCamera(camera);
 
 			renderer.setTexture(floors.texture());
-			auto batch = map.spritesInView(0, 0, 4, 4);
+			glm::vec2 p = camera.position();
+			float width = camera.width();
+			float height = camera.height();
+			auto batch = map.spritesInView(-p.x / 32, -p.y / 32, width / 32, height / 32);
 			renderer.setBatch(batch);
 			renderer.Draw(batch.size());
 

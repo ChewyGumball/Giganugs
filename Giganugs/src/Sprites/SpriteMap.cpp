@@ -23,14 +23,17 @@ namespace Giganugs::Sprites {
 	{
 		uint32_t startX = static_cast<uint32_t>(std::clamp(std::floorf(viewX), 0.f, static_cast<float>(m_width)));
 		uint32_t startY = static_cast<uint32_t>(std::clamp(std::floorf(viewY), 0.f, static_cast<float>(m_height)));
-		uint32_t endX = static_cast<uint32_t>(std::clamp(std::ceilf(viewWidth), 0.f, static_cast<float>(m_width)));
-		uint32_t endY = static_cast<uint32_t>(std::clamp(std::ceilf(viewHeight), 0.f, static_cast<float>(m_height)));
+		uint32_t endX = static_cast<uint32_t>(std::clamp(std::ceilf(viewX + viewWidth), 0.f, static_cast<float>(m_width)));
+		uint32_t endY = static_cast<uint32_t>(std::clamp(std::ceilf(viewY + viewHeight), 0.f, static_cast<float>(m_height)));
 
 		std::vector<SpriteInstanceData> visibleSprites;
 
 		for (uint32_t row = startX; row < endX; row++) {
 			for (uint32_t column = startY; column < endY ; column++) {
-				visibleSprites.push_back(sprites[row * m_width + column]);
+				auto& spriteInstance = sprites[row * m_width + column];
+				if (spriteInstance.width != 0) {
+					visibleSprites.push_back(spriteInstance);
+				}
 			}
 		}
 		
