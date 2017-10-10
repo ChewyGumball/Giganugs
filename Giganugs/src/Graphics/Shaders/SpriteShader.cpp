@@ -33,14 +33,15 @@ namespace Giganugs::Graphics {
 	SpriteShader::~SpriteShader()
 	{
 	}
-	void SpriteShader::setBatch(std::vector<Giganugs::Sprites::SpriteInstanceData> parts, ComPtr<ID3D11DeviceContext> context)
+
+	void SpriteShader::setBatch(const Giganugs::Sprites::SpriteBatch& batch, ComPtr<ID3D11DeviceContext> context)
 	{
 		size_t s = sizeof(Giganugs::Sprites::SpriteInstanceData);
 		auto d = batchData.Map(context);
-		std::memcpy(d.pData, parts.data(), parts.size() * s);
+		std::memcpy(d.pData, batch.instances.data(), batch.instances.size() * s);
 		batchData.Unmap(context);
-
 	}
+
 	void SpriteShader::Set(ComPtr<ID3D11DeviceContext> context)
 	{
 		vertexShader.Set(context);

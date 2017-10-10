@@ -19,6 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Resources\Catalogs\SpriteAtlasCatalog.cpp" />
+    <ClCompile Include="src\Game\Entities\Entity.cpp" />
+    <ClCompile Include="src\Game\Entities\ItemEntity.cpp" />
+    <ClCompile Include="src\Game\Entities\MachineEntity.cpp" />
+    <ClCompile Include="src\Game\Entities\PlayerEntity.cpp" />
+    <ClCompile Include="src\Game\Data\ItemData.cpp" />
+    <ClCompile Include="src\Game\Item.cpp" />
+    <ClCompile Include="src\Sprites\SpriteBatch.cpp" />
+    <ClCompile Include="src\Game\Factory.cpp" />
     <ClCompile Include="src\Graphics\Camera.cpp" />
     <ClCompile Include="include\lib\glm\detail\dummy.cpp" />
     <ClCompile Include="include\lib\glm\detail\glm.cpp" />
@@ -41,8 +50,12 @@
     <ClCompile Include="src\Util\FileUtils.cpp" />
     <ClCompile Include="src\Util\StringUtils.cpp" />
     <ClCompile Include="src\Graphics\Shaders\VertexShader.cpp" />
+    <ClCompile Include="src\Graphics\Texture.cpp" />
+    <ClCompile Include="src\Resources\Catalogs\TextureCatalog.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Game\Entities\Entity.h" />
+    <ClInclude Include="include\Game\Factory.h" />
     <ClInclude Include="include\Graphics\Camera.h" />
     <ClInclude Include="include\Graphics\Renderer.h" />
     <ClInclude Include="include\Graphics\Window.h" />
@@ -209,6 +222,18 @@
     <ClInclude Include="include\Graphics\Shaders\VertexShader.h" />
     <ClInclude Include="include\Graphics\Shaders\PixelShader.h" />
     <ClInclude Include="include\Graphics\Shaders\SpriteShader.h" />
+    <ClInclude Include="include\Sprites\SpriteBatch.h" />
+    <ClInclude Include="include\Game\Item.h" />
+    <ClInclude Include="include\Game\Data\ItemData.h" />
+    <ClInclude Include="include\Game\Entities\ItemEntity.h" />
+    <ClInclude Include="include\Game\Entities\MachineEntity.h" />
+    <ClInclude Include="include\Game\Entities\PlayerEntity.h" />
+    <ClInclude Include="include\Resources\ResourceCatalog.h" />
+    <ClInclude Include="include\Resources\ResourceTag.h" />
+    <ClInclude Include="include\Resources\Resource.h" />
+    <ClInclude Include="include\Graphics\Texture.h" />
+    <ClInclude Include="include\Resources\Catalogs\SpriteAtlasCatalog.h" />
+    <ClInclude Include="include\Resources\Catalogs\TextureCatalog.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\lib\glm\detail\func_common.inl" />
@@ -434,6 +459,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions);GLM_FORCE_DEPTH_ZERO_TO_ONE</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -470,6 +496,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions);GLM_FORCE_DEPTH_ZERO_TO_ONE</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -21,7 +21,7 @@ Pixel vertexShader(Vertex vertex)
 {
 	Pixel output;
 
-	float4 position = float4(vertex.position.xy + (vertex.basePosition * vertex.position.zw), 0, 1);
+	float4 position = float4(vertex.position.xy + (vertex.basePosition * vertex.position.zw) + vertex.basePosition, 0, 1);
 
 	output.position = mul(viewProjection, position);
 	output.textureCoordinates = float2(vertex.spriteDetails.x + vertex.spriteDetails.z * vertex.basePosition.x, vertex.spriteDetails.y + vertex.spriteDetails.w * (1 - vertex.basePosition.y));

@@ -9,6 +9,7 @@
 #include "Graphics/Shaders/SpriteShader.h"
 
 #include "Sprites/SpriteAtlas.h"
+#include "Sprites/SpriteBatch.h"
 
 namespace Giganugs::Graphics {
 	class Window;
@@ -37,10 +38,11 @@ namespace Giganugs::Graphics {
 		Microsoft::WRL::ComPtr<ID3D11Device> getDevice();
 
 		void setTexture(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture);
-		void setBatch(std::vector<Giganugs::Sprites::SpriteInstanceData>& parts);
+		void setBatch(const Giganugs::Sprites::SpriteBatch& batch);
 		void setCamera(const Camera& camera);
 
 		void Draw(uint32_t instanceCount);
+		void Draw(const Sprites::SpriteBatch& batch);
 		void Clear();
 		void Swap();
 	};

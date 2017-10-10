@@ -26,7 +26,7 @@ namespace {
 		{
 			if (action == FW::Action::Modified)
 			{
-				FW::String fullPath = directory + T("\\") + filename;
+				FW::String fullPath = directory + STRING_LITERAL("\\") + filename;
 				if (watchers.count(fullPath) > 0)
 				{
 					for (auto observer : watchers[fullPath])
@@ -34,7 +34,7 @@ namespace {
 						observer();
 					}
 				}
-				fullPath = directory + T("/") + filename;
+				fullPath = directory + STRING_LITERAL("/") + filename;
 				if (watchers.count(fullPath) > 0)
 				{
 					for (auto observer : watchers[fullPath])
@@ -48,7 +48,7 @@ namespace {
 		void add(FW::String filename, std::function<void()> observer)
 		{
 			watchers[filename].push_back(observer);
-			std::wstring filepath = filename.substr(0, filename.find_last_of(T("/\\")));
+			std::wstring filepath = filename.substr(0, filename.find_last_of(STRING_LITERAL("/\\")));
 			if (watchedDirectories.count(filepath) == 0)
 			{
 				fileWatcher->addWatch(filepath, this);
@@ -116,6 +116,13 @@ namespace Util::File
 			end = end + 1;
 		}
 	}
+
+#if UNICODE
+	void WatchForChanges(const std::string & filename, std::function<void()> observer)
+	{
+		WatchForChanges(std::wstring(filename.begin(), filename.end()), observer);
+	}
+#endif
 
 	std::vector<uint8_t> ReadPNG(const std::string & filename)
 	{

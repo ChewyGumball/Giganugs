@@ -6,25 +6,29 @@
 #include <wrl.h>
 #include <d3d11.h>
 
+#include "Graphics/Texture.h"
+#include "Resources/Resource.h"
+#include "Resources/ResourceCatalog.h"
 #include "Sprites/SpriteAtlasPart.h"
 
 namespace Giganugs::Sprites {
-	class SpriteAtlas
+	class SpriteAtlas : public Resources::Resource<SpriteAtlas>
 	{
-		int ID;
 		std::vector<SpriteAtlasPart> parts;
 		std::unordered_map<std::string, int32_t> namesToIndices;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureView;
+		Graphics::Texture* m_texture;
 
 
 	public:
-		SpriteAtlas(int ID, std::string_view filename, Microsoft::WRL::ComPtr<ID3D11Device> device);
+		SpriteAtlas(uint32_t ID, const std::string& filename, Resources::ResourceCatalog<Graphics::Texture>* textureCatalog);
 		~SpriteAtlas();
 
 		int32_t indexOf(const std::string& spriteName) const;
 
 		SpriteAtlasPart part(uint32_t index);
 
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture() const;
+		Graphics::Texture* texture() const;
+
+		void reload(const std::string& filename, Resources::ResourceCatalog<Graphics::Texture>* textureCatalog);
 	};
 }

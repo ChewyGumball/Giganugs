@@ -4,7 +4,7 @@
 
 namespace Giganugs::Graphics {
 	Camera::Camera(float left, float right, float bottom, float top, float near, float far)
-		:projection(glm::ortho(left, right, bottom, top, near, far)), m_width(right - left), m_height(top - bottom)
+		:projection(glm::ortho(left, right, bottom, top, near, far)), m_width(right - left), m_height(top - bottom), m_zoom(1.f)
 	{
 	}
 
@@ -20,7 +20,7 @@ namespace Giganugs::Graphics {
 
 	void Camera::zoom(float distance)
 	{
-		//view = glm::scale(view, glm::vec3(distance, distance, distance));
+		m_zoom = distance;
 	}
 
 	float Camera::width() const
@@ -38,11 +38,16 @@ namespace Giganugs::Graphics {
 		return m_position;
 	}
 
+	float Camera::zoom() const
+	{
+		return m_zoom;
+	}
+
 	glm::mat4 Camera::viewProjection() const
 	{
 		float x = std::floor(m_position.x);
 		float y = std::floor(m_position.y);
 		float z = std::floor(m_position.z);
-		return projection * glm::translate(glm::vec3(x, y, z));
+		return projection * glm::scale(glm::vec3(m_zoom)) * glm::translate(-glm::vec3(x, y, z));
 	}
 }

@@ -61,6 +61,7 @@ namespace Giganugs::Graphics {
 		samplerDescription.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 		samplerDescription.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 		samplerDescription.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDescription.Filter = D3D11_FILTER_ANISOTROPIC;
 		samplerDescription.MinLOD = 0;
 		samplerDescription.MaxLOD = D3D11_FLOAT32_MAX;
 
@@ -101,9 +102,10 @@ namespace Giganugs::Graphics {
 		context->PSSetSamplers(0, 1, defaultSampler.GetAddressOf());
 	}
 
-	void Renderer::setBatch(std::vector<Giganugs::Sprites::SpriteInstanceData>& parts)
+	void Renderer::setBatch(const Giganugs::Sprites::SpriteBatch& batch)
 	{
-		spriteShader->setBatch(parts, context);
+		setTexture(batch.atlas->texture()->view());
+		spriteShader->setBatch(batch, context);
 	}
 
 	void Renderer::setCamera(const Camera & camera)
@@ -124,9 +126,15 @@ namespace Giganugs::Graphics {
 		context->DrawInstanced(4, instanceCount, 0, 0);
 	}
 
+	void Renderer::Draw(const Sprites::SpriteBatch & batch)
+	{
+		setBatch(batch);
+		Draw(batch.instances.size());
+	}
+
 	void Renderer::Clear()
 	{
-		float clearColour[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
+		float clearColour[4] = { 0.15f, 0.15f, 0.15f, 1.0f };
 		context->ClearRenderTargetView(backBuffer.Get(), clearColour);
 	}
 	void Renderer::Swap()

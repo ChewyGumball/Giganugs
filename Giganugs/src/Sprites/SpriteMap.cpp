@@ -1,11 +1,31 @@
 #include "Sprites/SpriteMap.h"
 #include <algorithm>
 
+#include "Util/FileUtils.h"
+#include "Util/StringUtils.h"
+
+#include "Graphics/Camera.h"
+
+using Microsoft::WRL::ComPtr;
+
 namespace Giganugs::Sprites {
 
-	SpriteMap::SpriteMap(int width, int height, SpriteAtlas* atlas)
-		:m_width(width), m_height(height), atlas(atlas), sprites(width * height)
+	SpriteMap::SpriteMap(int width, int height, int tilePixelSize, SpriteAtlas* atlas)
+		:m_width(width), m_height(height), tilePixelSize(tilePixelSize), atlas(atlas), sprites(width * height)
 	{
+	}
+
+	SpriteMap::SpriteMap(std::string_view filename, ComPtr<ID3D11Device> device)
+	{
+		std::string contents = Util::File::ReadWholeFile(filename);
+		std::vector<std::string_view> fileLines = Util::String::Split(contents, '\n');
+
+		auto firstLine = Util::String::Split(fileLines[0], ' ');
+
+		std::string atlasFilename = "resources/sprites/atlases/" + std::string(firstLine[0]);
+
+		//atlas =
+		//Should sprite map own the atlas? no!
 	}
 
 
@@ -15,11 +35,28 @@ namespace Giganugs::Sprites {
 
 	void SpriteMap::set(int32_t x, int32_t y, uint32_t spriteIndex)
 	{
-		sprites[x * m_width + y] = { (float)x * 32, (float)y * 32, (float)32, (float)32, atlas->part(spriteIndex) };
+		auto& instance = sprites[x * m_width + y];
+		instance.x = (float)x * tilePixelSize;
+		instance.y = (float)y * tilePixelSize;
+		instance.width = (float)tilePixelSize;
+		instance.height = (float)tilePixelSize;
+		instance.atlasData = atlas->part(spriteIndex);
+	}
+
+	void SpriteMap::clear(int32_t x, int32_t y)
+	{
+		auto& instance = sprites[x * m_width + y];
+		instance.width = 0; // HACK: spritesInView checks for width == 0 to decide if this sprite should be drawn
 	}
 
 
-	std::vector<SpriteInstanceData> SpriteMap::spritesInView(float viewX, float viewY, float viewWidth, float viewHeight)
+	SpriteBatch SpriteMap::spritesInView(const Graphics::Camera & camera)
+	{
+		glm::vec2 cameraPosition = camera.position() / glm::vec3(static_cast<float>(tilePixelSize));
+		return spritesInView(cameraPosition.x, cameraPosition.y, camera.width() / tilePixelSize / camera.zoom(), camera.height() / tilePixelSize / camera.zoom());
+	}
+
+	SpriteBatch SpriteMap::spritesInView(float viewX, float viewY, float viewWidth, float viewHeight)
 	{
 		uint32_t startX = static_cast<uint32_t>(std::clamp(std::floorf(viewX), 0.f, static_cast<float>(m_width)));
 		uint32_t startY = static_cast<uint32_t>(std::clamp(std::floorf(viewY), 0.f, static_cast<float>(m_height)));
@@ -37,7 +74,7 @@ namespace Giganugs::Sprites {
 			}
 		}
 		
-		return visibleSprites;
+		return { atlas, visibleSprites };
 	}
 	int SpriteMap::width() const
 	{

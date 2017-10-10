@@ -12,6 +12,7 @@
 
 #include "Graphics/Shaders/VertexShader.h"
 #include "Graphics/Shaders/PixelShader.h"
+#include "Sprites/SpriteBatch.h"
 
 namespace Giganugs::Graphics {
 	class VertexShader;
@@ -30,7 +31,7 @@ namespace Giganugs::Graphics {
 		SpriteShader(Microsoft::WRL::ComPtr<ID3D11Device> device);
 		~SpriteShader();
 
-		void setBatch(std::vector<Giganugs::Sprites::SpriteInstanceData> parts, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
+		void setBatch(const Giganugs::Sprites::SpriteBatch& batch, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
 
 		void Set(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
 	};

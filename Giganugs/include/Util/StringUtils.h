@@ -2,9 +2,9 @@
 #include <vector>
 
 #if UNICODE
-#define T(string) L##string
+#define STRING_LITERAL(string) L##string
 #else
-#define T(string) string
+#define STRING_LITERAL(string) string
 #endif
 
 namespace Util::String

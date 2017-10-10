@@ -4,21 +4,44 @@
 #include "Util/FileUtils.h"
 #include "Util/StringUtils.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "lib/stb_image/stb_image.h"
 
 using Microsoft::WRL::ComPtr;
 
 namespace Giganugs::Sprites {
-	SpriteAtlas::SpriteAtlas(int ID, std::string_view filename, ComPtr<ID3D11Device> device)
-		:ID(ID)
+	SpriteAtlas::SpriteAtlas(uint32_t ID, const std::string& filename, Resources::ResourceCatalog<Graphics::Texture>* textureCatalog)
+		:Resource(ID)
+	{
+		reload(filename, textureCatalog);
+	}
+
+
+	SpriteAtlas::~SpriteAtlas()
+	{
+	}
+
+	int32_t SpriteAtlas::indexOf(const std::string& spriteName) const
+	{
+		return namesToIndices.at(spriteName);
+	}
+	SpriteAtlasPart SpriteAtlas::part(uint32_t index)
+	{
+		return parts[index];
+	}
+
+	Graphics::Texture* SpriteAtlas::texture() const
+	{
+		return m_texture;
+	}
+
+	void SpriteAtlas::reload(const std::string & filename, Resources::ResourceCatalog<Graphics::Texture>* textureCatalog)
 	{
 		std::string contents = Util::File::ReadWholeFile(filename);
 		std::vector<std::string_view> fileLines = Util::String::Split(contents, '\n');
 
 		auto firstLine = Util::String::Split(fileLines[0], ' ');
 
-		std::string imageFilename = "resources/sprites/images/" + std::string(firstLine[0]);
+		m_texture = textureCatalog->locate(std::string(firstLine[0]));
+
 		int imageWidth = Util::String::svtoi(firstLine[1]);
 		int imageHeight = Util::String::svtoi(firstLine[2]);
 
@@ -35,52 +58,5 @@ namespace Giganugs::Sprites {
 				parts.push_back({ x / imageWidth, y / imageHeight, width / imageWidth, height / imageHeight });
 			}
 		}
-
-		int width, height, channels;
-		uint8_t* data = stbi_load(imageFilename.c_str(), &width, &height, &channels, 0);
-
-		D3D11_SUBRESOURCE_DATA imageData;
-		imageData.pSysMem = data;
-		imageData.SysMemPitch = sizeof(uint8_t) * channels * width;
-		imageData.SysMemSlicePitch = imageData.SysMemPitch * height;
-
-		D3D11_TEXTURE2D_DESC textureDescription = {};
-		textureDescription.Width = width;
-		textureDescription.Height = height;
-		textureDescription.MipLevels = 1;
-		textureDescription.ArraySize = 1;
-		textureDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		textureDescription.SampleDesc.Count = 1;
-		textureDescription.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-
-		ComPtr<ID3D11Texture2D> texture;
-		device->CreateTexture2D(&textureDescription, &imageData, &texture);
-
-		stbi_image_free(data);
-
-		D3D11_SHADER_RESOURCE_VIEW_DESC viewDescription = {};
-		viewDescription.Format = textureDescription.Format;
-		viewDescription.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		viewDescription.Texture2D.MipLevels = textureDescription.MipLevels;
-
-		device->CreateShaderResourceView(texture.Get(), &viewDescription, &textureView);
-	}
-
-
-	SpriteAtlas::~SpriteAtlas()
-	{
-	}
-
-	int32_t SpriteAtlas::indexOf(const std::string& spriteName) const
-	{
-		return namesToIndices.at(spriteName);
-	}
-	SpriteAtlasPart SpriteAtlas::part(uint32_t index)
-	{
-		return parts[index];
-	}
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> SpriteAtlas::texture() const
-	{
-		return textureView;
 	}
 }
