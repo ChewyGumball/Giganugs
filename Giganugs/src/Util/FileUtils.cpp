@@ -17,38 +17,43 @@ namespace {
 	class UpdateListener : public FW::FileWatchListener
 	{
 	private:
-		std::unordered_map<FW::String, std::vector<std::function<void()>>> watchers;
+		std::unordered_map<FW::String, std::vector<std::function<bool()>>> watchers;
 		std::unordered_set<FW::String> watchedDirectories;
+
+		std::unordered_set<std::function<bool()>*> duplicateChanges;
 	public:
 		UpdateListener()
 		{}
+
 		void handleFileAction(FW::WatchID watchID, const FW::String& directory, const FW::String& filename, FW::Action action)
 		{
 			if (action == FW::Action::Modified)
 			{
-				FW::String fullPath = directory + STRING_LITERAL("\\") + filename;
+				FW::String fullPath = directory + filename;
 				if (watchers.count(fullPath) > 0)
 				{
-					for (auto observer : watchers[fullPath])
-					{
-						observer();
-					}
-				}
-				fullPath = directory + STRING_LITERAL("/") + filename;
-				if (watchers.count(fullPath) > 0)
-				{
-					for (auto observer : watchers[fullPath])
-					{
-						observer();
+					for (auto& observer : watchers[fullPath]) {
+						duplicateChanges.insert(&observer);
 					}
 				}
 			}
 		}
 
-		void add(FW::String filename, std::function<void()> observer)
+		void postProcess() {
+			for (auto it = duplicateChanges.begin(); it != duplicateChanges.end();) {
+				if ((**it)()) {
+					it = duplicateChanges.erase(it);
+				}
+				else {
+					++it;
+				}
+			}
+		}
+
+		void add(FW::String filename, std::function<bool()> observer)
 		{
 			watchers[filename].push_back(observer);
-			std::wstring filepath = filename.substr(0, filename.find_last_of(STRING_LITERAL("/\\")));
+			FW::String filepath = filename.substr(0, filename.find_last_of(STRING_LITERAL("/\\")) + 1);
 			if (watchedDirectories.count(filepath) == 0)
 			{
 				fileWatcher->addWatch(filepath, this);
@@ -118,7 +123,7 @@ namespace Util::File
 	}
 
 #if UNICODE
-	void WatchForChanges(const std::string & filename, std::function<void()> observer)
+	void WatchForChanges(const std::string & filename, std::function<bool()> observer)
 	{
 		WatchForChanges(std::wstring(filename.begin(), filename.end()), observer);
 	}
@@ -129,12 +134,13 @@ namespace Util::File
 		return std::vector<uint8_t>();
 	}
 
-	void WatchForChanges(const FW::String& filename, std::function<void()> observer)
+	void WatchForChanges(const FW::String& filename, std::function<bool()> observer)
 	{
 		FileUpdateListener.add(filename, observer);
 	}
 	void MonitorFiles()
 	{
 		fileWatcher->update();
+		FileUpdateListener.postProcess();
 	}
 }

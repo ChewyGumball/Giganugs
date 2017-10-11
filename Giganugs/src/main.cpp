@@ -14,6 +14,8 @@
 #include "Resources/Catalogs/TextureCatalog.h"
 #include "Resources/Catalogs/SpriteAtlasCatalog.h"
 
+#include "Util/FileUtils.h"
+
 
 int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	if(!DirectX::XMVerifyCPUSupport()) {
@@ -76,6 +78,8 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			previousTime = currentTime;
 
 			timer++;
+
+			Util::File::MonitorFiles();
 
 			bool updateBatch = false;
 			if (timer % 1000 == 0) {

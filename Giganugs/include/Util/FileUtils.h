@@ -15,8 +15,8 @@ namespace Util::File
 
 	void ProcessLines(const std::string& filename, std::function<void(const std::string_view&)> processor);
 #if UNICODE
-	void WatchForChanges(const std::string& filename, std::function<void()> observer);
+	void WatchForChanges(const std::string& filename, std::function<bool()> observer);
 #endif
-	void WatchForChanges(const FW::String& filename, std::function<void()> observer);
+	void WatchForChanges(const FW::String& filename, std::function<bool()> observer);
 	void MonitorFiles();
 }

@@ -22,6 +22,6 @@ namespace Giganugs::Graphics {
 		int32_t width() const;
 		int32_t height() const;
 		const Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> view() const;
-		void reload(const std::string& filename, Microsoft::WRL::ComPtr<ID3D11Device> device);
+		bool reload(const std::string& filename, Microsoft::WRL::ComPtr<ID3D11Device> device);
 	};
 }

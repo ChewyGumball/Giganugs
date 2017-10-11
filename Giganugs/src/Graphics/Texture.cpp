@@ -31,10 +31,14 @@ namespace Giganugs::Graphics {
 		return textureView;
 	}
 
-	void Texture::reload(const std::string & filename, Microsoft::WRL::ComPtr<ID3D11Device> device)
+	bool Texture::reload(const std::string & filename, Microsoft::WRL::ComPtr<ID3D11Device> device)
 	{
 		int channels;
 		uint8_t* data = stbi_load(filename.c_str(), &m_width, &m_height, &channels, 0);
+
+		if (data == nullptr) {
+			return false;
+		}
 
 		D3D11_SUBRESOURCE_DATA imageData;
 		imageData.pSysMem = data;
@@ -60,5 +64,7 @@ namespace Giganugs::Graphics {
 		viewDescription.Texture2D.MipLevels = textureDescription.MipLevels;
 
 		device->CreateShaderResourceView(texturePointer.Get(), &viewDescription, &textureView);
+
+		return true;
 	}
 }

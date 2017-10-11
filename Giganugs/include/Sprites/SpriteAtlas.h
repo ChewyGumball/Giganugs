@@ -29,6 +29,6 @@ namespace Giganugs::Sprites {
 
 		Graphics::Texture* texture() const;
 
-		void reload(const std::string& filename, Resources::ResourceCatalog<Graphics::Texture>* textureCatalog);
+		bool reload(const std::string& filename, Resources::ResourceCatalog<Graphics::Texture>* textureCatalog);
 	};
 }

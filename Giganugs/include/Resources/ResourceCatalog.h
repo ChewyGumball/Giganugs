@@ -19,7 +19,7 @@ namespace Giganugs::Resources {
 
 	protected:
 		virtual T* create(const std::string& filename, uint32_t ID) = 0;
-		virtual void reload(const std::string& filename, T& resource) = 0;
+		virtual bool reload(const std::string& filename, T& resource) = 0;
 
 	public:
 		ResourceCatalog(std::vector<std::string> resourceLocations) 
@@ -42,9 +42,7 @@ namespace Giganugs::Resources {
 						resources[tag] = resource;
 						resourceNames[resourceName] = tag;
 
-						Util::File::WatchForChanges(location, [=]() {
-							this->reload(location, *resources[tag]);
-						});
+						Util::File::WatchForChanges(location, [=]() -> bool { return this->reload(location, *resources[tag]); });
 						found = true;
 						break;
 					}

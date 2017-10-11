@@ -18,8 +18,8 @@ namespace Giganugs::Resources {
 		return new Graphics::Texture(ID, filename, device);
 	}
 
-	void Giganugs::Resources::TextureCatalog::reload(const std::string & filename, Graphics::Texture& resource)
+	bool Giganugs::Resources::TextureCatalog::reload(const std::string & filename, Graphics::Texture& resource)
 	{
-		resource.reload(filename, device);
+		return resource.reload(filename, device);
 	}
 }

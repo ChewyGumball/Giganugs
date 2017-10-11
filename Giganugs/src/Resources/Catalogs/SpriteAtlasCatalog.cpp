@@ -20,7 +20,8 @@ namespace Giganugs::Resources {
 		return new Sprites::SpriteAtlas(ID, filename, textureCatalog);
 	}
 
-	void Giganugs::Resources::SpriteAtlasCatalog::reload(const std::string & filename, Sprites::SpriteAtlas& resource)
+	bool Giganugs::Resources::SpriteAtlasCatalog::reload(const std::string & filename, Sprites::SpriteAtlas& resource)
 	{
+		return resource.reload(filename, textureCatalog);
 	}
 }

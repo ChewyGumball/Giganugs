@@ -33,7 +33,7 @@ namespace Giganugs::Sprites {
 		return m_texture;
 	}
 
-	void SpriteAtlas::reload(const std::string & filename, Resources::ResourceCatalog<Graphics::Texture>* textureCatalog)
+	bool SpriteAtlas::reload(const std::string & filename, Resources::ResourceCatalog<Graphics::Texture>* textureCatalog)
 	{
 		std::string contents = Util::File::ReadWholeFile(filename);
 		std::vector<std::string_view> fileLines = Util::String::Split(contents, '\n');
@@ -58,5 +58,7 @@ namespace Giganugs::Sprites {
 				parts.push_back({ x / imageWidth, y / imageHeight, width / imageWidth, height / imageHeight });
 			}
 		}
+
+		return true;
 	}
 }
