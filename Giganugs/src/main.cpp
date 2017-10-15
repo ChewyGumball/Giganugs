@@ -14,6 +14,11 @@
 #include "Resources/Catalogs/TextureCatalog.h"
 #include "Resources/Catalogs/SpriteAtlasCatalog.h"
 
+#include "Input/Clock.h"
+
+#include "Game/Context.h"
+#include "Game/Factory.h"
+
 #include "Util/FileUtils.h"
 
 
@@ -31,6 +36,7 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	Giganugs::Sprites::SpriteAtlas* dogs = spriteAtlases.locate("dogs.atlas");
 	Giganugs::Sprites::SpriteAtlas* floors = spriteAtlases.locate("wood_floors.atlas");
+	Giganugs::Sprites::SpriteAtlas* counters = spriteAtlases.locate("counters.atlas");
 
 	Giganugs::Sprites::SpriteAnimation brownDown("resources/sprites/animations/dog_brown_walk_down.anim", dogs);
 	Giganugs::Sprites::SpriteAnimation greyDown("resources/sprites/animations/dog_grey_walk_up.anim", dogs);
@@ -43,9 +49,14 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	Giganugs::Sprites::SpriteMap map(100, 100, 32, floors);
 	for (int x = 0; x < 100; x++) {
 		for (int y = 0; y < 100; y++) {
-			map.set(x, y, (x / 10) + (y / 10));
+			map.setAtTileCoordinates(x, y, (x / 10) + (y / 10));
 		}
 	}
+
+
+	Giganugs::Sprites::SpriteMap machines(100, 100, 32, counters);
+
+	Giganugs::Game::Factory factory(map, machines);
 
 
 	uint32_t timer = 0;
@@ -57,11 +68,19 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	parts.push_back({ 32, 0, 32, 32, dogs->part(tanRight.frames[currentFrame]) });
 	parts.push_back({ 0, 32, 32, 32, dogs->part(shiftLeft.frames[currentFrame]) });
 	
+
+	Giganugs::Input::Clock gameClock;
+	Giganugs::Input::Clock systemClock;
+
+	Giganugs::Game::Context context{ &window.mouse(), &window.keyboard(), &gameClock, &systemClock };
 	std::chrono::high_resolution_clock clock;
 	
 	auto previousTime = clock.now();
 
 	float speed = 128;
+
+	int32_t counterIndex = 0;
+
 
 	MSG message;
 	bool running = true;
@@ -73,9 +92,10 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			running = message.message != WM_QUIT;
 		}
 		else {
-			auto currentTime = clock.now();
-			std::chrono::duration<float> timeDelta = currentTime - previousTime;
-			previousTime = currentTime;
+			gameClock.tick();
+			systemClock.tick();
+
+			auto& timeDelta = context.gameClock->deltaTickTime();
 
 			timer++;
 
@@ -105,14 +125,33 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 				camera.move(glm::vec2(0.f, -speed * timeDelta.count()));
 			}
 
+			if (window.mouse()[Giganugs::Input::MouseButton::Left] == Giganugs::Input::InputState::Pressed && window.mouse().changedThisFrame(Giganugs::Input::MouseButton::Left)) {
+				glm::vec2 realPosition = camera.unproject(window.mouse().position());
+				factory.setMachine(realPosition.x, realPosition.y, counterIndex++);
+
+				if (counterIndex >= counters->partCount()) {
+					counterIndex = 0;
+				}
+			}
+
+			if (window.keyboard()[Giganugs::Input::Key::P] == Giganugs::Input::InputState::Pressed) {
+				gameClock.pause();
+			}
+			if (window.keyboard()[Giganugs::Input::Key::U] == Giganugs::Input::InputState::Pressed) {
+				gameClock.resume();
+			}
+
 			renderer.Clear();
 
 			renderer.setCamera(camera);
 
-			renderer.Draw(map.spritesInView(camera));
+			factory.Draw(renderer, camera);
+
 			renderer.Draw({ dogs, parts });
 
 			renderer.Swap();
+
+			window.newInputFrame();
 		}
 	}
 

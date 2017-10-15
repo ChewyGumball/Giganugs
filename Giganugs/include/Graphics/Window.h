@@ -34,5 +34,7 @@ namespace Giganugs::Graphics {
 
 		const Input::KeyboardState& keyboard() const;
 		const Input::MouseState& mouse() const;
+
+		void newInputFrame();
 	};
 }

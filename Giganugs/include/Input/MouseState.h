@@ -13,7 +13,8 @@ namespace Giganugs::Input
 		glm::vec2 mousePosition;
 		glm::vec2 mouseDeltaPosition;
 		std::unordered_map<MouseButton, InputState> state;
-		MouseButton mostRecentlyChangedButton;
+		std::unordered_map<MouseButton, InputState> stateChangesThisFrame;
+
 		int wheelTicks;
 	public:
 		MouseState();
@@ -29,8 +30,9 @@ namespace Giganugs::Input
 		void setWheelTicksDelta(int deltaTicks);
 		void setButtonState(MouseButton button, InputState inputState);
 		void clear();
+		void newFrame();
 
 		const InputState& operator[](MouseButton button) const;
-		const MouseButton& buttonWithMostRecentStateChange() const;
+		bool changedThisFrame(MouseButton button) const;
 	};
 }

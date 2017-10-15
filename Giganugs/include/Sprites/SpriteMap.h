@@ -22,17 +22,20 @@ namespace Giganugs::Sprites {
 		std::vector<SpriteInstanceData> sprites; 
 
 	public:
-		SpriteMap(int width, int height, int tilePixelSize, SpriteAtlas* atlas);
+		SpriteMap(uint32_t width, uint32_t height, uint32_t tilePixelSize, SpriteAtlas* atlas);
 		SpriteMap(std::string_view filename, Microsoft::WRL::ComPtr<ID3D11Device> device);
 		~SpriteMap();
 
-		void set(int32_t x, int32_t y, uint32_t spriteIndex);
-		void clear(int32_t x, int32_t y);
+		void setAtTileCoordinates(int32_t x, int32_t y, uint32_t spriteIndex);
+		void setAtPixelCoordinates(int32_t x, int32_t y, uint32_t spriteIndex);
+		void clearAtTileCoordinates(int32_t x, int32_t y); 
+		void clearAtPixelCoordinates(int32_t x, int32_t y);
 
 		SpriteBatch spritesInView(const Graphics::Camera& camera);
 		SpriteBatch spritesInView(float x, float y, float width, float height);
 
-		int width() const;
-		int height() const;
+		uint32_t width() const;
+		uint32_t height() const;
+		uint32_t tileSize() const;
 	};
 }

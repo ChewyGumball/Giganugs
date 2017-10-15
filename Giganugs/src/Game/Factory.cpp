@@ -24,4 +24,8 @@ namespace Giganugs::Game {
 		renderer.Draw(floorMap.spritesInView(camera));
 		renderer.Draw(machineMap.spritesInView(camera));
 	}
+	void Factory::setMachine(int32_t x, int32_t y, int32_t spriteIndex)
+	{
+		machineMap.setAtPixelCoordinates(x, y, spriteIndex);
+	}
 }

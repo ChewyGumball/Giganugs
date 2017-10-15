@@ -41,8 +41,14 @@ namespace {
 		case 0x44: // d
 			keyboard.setKeyState(Key::D, InputState::Pressed);
 			break;
+		case 0x50: // p
+			keyboard.setKeyState(Key::P, InputState::Pressed);
+			break;
 		case 0x53: // s
 			keyboard.setKeyState(Key::S, InputState::Pressed);
+			break;
+		case 0x55: // u
+			keyboard.setKeyState(Key::U, InputState::Pressed);
 			break;
 		case 0x57: // w
 			keyboard.setKeyState(Key::W, InputState::Pressed);
@@ -61,8 +67,14 @@ namespace {
 		case 0x44: // d
 			keyboard.setKeyState(Key::D, InputState::Released);
 			break;
+		case 0x50: // p
+			keyboard.setKeyState(Key::P, InputState::Released);
+			break;
 		case 0x53: // s
 			keyboard.setKeyState(Key::S, InputState::Released);
+			break;
+		case 0x55: // u
+			keyboard.setKeyState(Key::U, InputState::Released);
 			break;
 		case 0x57: // w
 			keyboard.setKeyState(Key::W, InputState::Released);
@@ -70,7 +82,9 @@ namespace {
 		}
 	}
 
-	void processMouseButton(WPARAM wparam, Giganugs::Input::MouseState& mouse, Giganugs::Input::InputState state) {
+	void processMouseButton(WPARAM wparam, MouseButton mouseButton, Giganugs::Input::MouseState& mouse, Giganugs::Input::InputState state) {
+		mouse.setButtonState(mouseButton, state);
+		/*
 		switch (wparam) {
 		case VK_LBUTTON:
 			mouse.setButtonState(MouseButton::Left, state);
@@ -82,6 +96,7 @@ namespace {
 			mouse.setButtonState(MouseButton::Middle, state);
 			break;
 		}
+		*/
 	}
 
 	void processMouseMove(LPARAM lparam, Giganugs::Input::MouseState& mouse, int windowHeight) {
@@ -115,22 +130,22 @@ namespace Giganugs::Graphics {
 	{		
 		switch (message) {
 		case WM_LBUTTONDOWN:
-			processMouseButton(wparam, mouseState, InputState::Pressed);
+			processMouseButton(wparam, MouseButton::Left, mouseState, InputState::Pressed);
 			break;
 		case WM_LBUTTONUP:
-			processMouseButton(wparam, mouseState, InputState::Released);
+			processMouseButton(wparam, MouseButton::Left, mouseState, InputState::Released);
 			break;
 		case WM_RBUTTONDOWN:
-			processMouseButton(wparam, mouseState, InputState::Pressed);
+			processMouseButton(wparam, MouseButton::Right, mouseState, InputState::Pressed);
 			break;
 		case WM_RBUTTONUP:
-			processMouseButton(wparam, mouseState, InputState::Released);
+			processMouseButton(wparam, MouseButton::Right, mouseState, InputState::Released);
 			break;
 		case WM_MBUTTONDOWN:
-			processMouseButton(wparam, mouseState, InputState::Pressed);
+			processMouseButton(wparam, MouseButton::Middle, mouseState, InputState::Pressed);
 			break;
 		case WM_MBUTTONUP:
-			processMouseButton(wparam, mouseState, InputState::Released);
+			processMouseButton(wparam, MouseButton::Middle, mouseState, InputState::Released);
 			break;
 		case WM_MOUSEMOVE:
 			processMouseMove(lparam, mouseState, height);
@@ -173,6 +188,11 @@ namespace Giganugs::Graphics {
 	const Input::MouseState & Window::mouse() const
 	{
 		return mouseState;
+	}
+
+	void Window::newInputFrame()
+	{
+		mouseState.newFrame();
 	}
 	
 

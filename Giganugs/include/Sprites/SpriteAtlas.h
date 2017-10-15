@@ -27,6 +27,8 @@ namespace Giganugs::Sprites {
 
 		SpriteAtlasPart part(uint32_t index);
 
+		uint32_t partCount() const;
+
 		Graphics::Texture* texture() const;
 
 		bool reload(const std::string& filename, Resources::ResourceCatalog<Graphics::Texture>* textureCatalog);

@@ -2,7 +2,7 @@
 
 namespace Giganugs::Input
 {
-	MouseState::MouseState() : mousePosition(glm::vec2(0,0)), mouseDeltaPosition(glm::vec2(0,0)), wheelTicks(0), mostRecentlyChangedButton(MouseButton::Left)
+	MouseState::MouseState() : mousePosition(glm::vec2(0,0)), mouseDeltaPosition(glm::vec2(0,0)), wheelTicks(0)
 	{
 		state[MouseButton::Left] = InputState::Released;
 		state[MouseButton::Right] = InputState::Released;
@@ -43,7 +43,7 @@ namespace Giganugs::Input
 	void MouseState::setButtonState(MouseButton button, InputState inputState)
 	{
 		state[button] = inputState;
-		mostRecentlyChangedButton = button;
+		stateChangesThisFrame[button] = inputState;
 	}
 	void MouseState::clear()
 	{
@@ -54,15 +54,20 @@ namespace Giganugs::Input
 		mousePosition = glm::vec2(0, 0);
 		mouseDeltaPosition = glm::vec2(0, 0);
 		wheelTicks = 0; 
-		mostRecentlyChangedButton = MouseButton::Left;
+	}
+
+	void MouseState::newFrame()
+	{
+		stateChangesThisFrame.clear();
 	}
 
 	const InputState& MouseState::operator[](MouseButton button) const
 	{
 		return state.find(button)->second;
 	}
-	const MouseButton& MouseState::buttonWithMostRecentStateChange() const
+
+	bool MouseState::changedThisFrame(MouseButton button) const
 	{
-		return mostRecentlyChangedButton;
+		return stateChangesThisFrame.count(button) != 0;
 	}
 }

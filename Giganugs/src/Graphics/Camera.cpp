@@ -50,4 +50,9 @@ namespace Giganugs::Graphics {
 		float z = std::floor(m_position.z);
 		return projection * glm::scale(glm::vec3(m_zoom)) * glm::translate(-glm::vec3(x, y, z));
 	}
+
+	glm::vec2 Camera::unproject(const glm::vec2 & screenPosition) const
+	{
+		return  (screenPosition / glm::vec2(m_zoom)) + glm::vec2(m_position);
+	}
 }

@@ -28,6 +28,11 @@ namespace Giganugs::Sprites {
 		return parts[index];
 	}
 
+	uint32_t SpriteAtlas::partCount() const
+	{
+		return parts.size();
+	}
+
 	Graphics::Texture* SpriteAtlas::texture() const
 	{
 		return m_texture;

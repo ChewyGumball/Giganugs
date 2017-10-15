@@ -22,6 +22,8 @@ namespace Giganugs::Game {
 
 		void Update(std::chrono::duration<float> timeDelta);
 		void Draw(Graphics::Renderer& renderer, const Graphics::Camera& camera);
+
+		void setMachine(int32_t x, int32_t y, int32_t spriteIndex);
 	};
 }
 

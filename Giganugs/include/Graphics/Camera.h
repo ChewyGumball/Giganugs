@@ -1,6 +1,7 @@
 #pragma once
 #include "lib/glm/mat4x4.hpp"
 #include "lib/glm/vec3.hpp"
+#include "lib/glm/vec2.hpp"
 
 namespace Giganugs::Graphics {
 	class Camera
@@ -25,5 +26,7 @@ namespace Giganugs::Graphics {
 		float zoom() const;
 
 		glm::mat4 viewProjection() const;
+
+		glm::vec2 unproject(const glm::vec2& screenPosition) const;
 	};
 }

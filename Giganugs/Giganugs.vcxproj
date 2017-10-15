@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Input\Clock.cpp" />
     <ClCompile Include="src\Resources\Catalogs\SpriteAtlasCatalog.cpp" />
     <ClCompile Include="src\Game\Entities\Entity.cpp" />
     <ClCompile Include="src\Game\Entities\ItemEntity.cpp" />
@@ -54,6 +55,8 @@
     <ClCompile Include="src\Resources\Catalogs\TextureCatalog.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Input\Clock.h" />
+    <ClInclude Include="include\Game\Context.h" />
     <ClInclude Include="include\Game\Entities\Entity.h" />
     <ClInclude Include="include\Game\Factory.h" />
     <ClInclude Include="include\Graphics\Camera.h" />
@@ -452,8 +455,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions);GLM_FORCE_DEPTH_ZERO_TO_ONE</PreprocessorDefinitions>
@@ -487,8 +489,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
