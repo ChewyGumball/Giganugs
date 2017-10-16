@@ -4,7 +4,7 @@
 
 namespace Giganugs::Input
 {
-	KeyboardState::KeyboardState() : mostRecentlyChangedKey(Key::Enter)
+	KeyboardState::KeyboardState()
 	{
 		state[Key::Escape] = InputState::Released;
 		state[Key::One] = InputState::Released;
@@ -85,7 +85,7 @@ namespace Giganugs::Input
 	void KeyboardState::setKeyState(const Key key, const InputState inputState)
 	{
 		state[key] = inputState;
-		mostRecentlyChangedKey = key;
+		stateChangesThisFrame[key] = inputState;
 	}
 	
 	void KeyboardState::clear()
@@ -94,15 +94,22 @@ namespace Giganugs::Input
 		{
 			key->second = InputState::Released;
 		}
-		mostRecentlyChangedKey = Key::Enter;
+
+		stateChangesThisFrame.clear();
+	}
+
+	void KeyboardState::newFrame()
+	{
+		stateChangesThisFrame.clear();
 	}
 
 	const InputState& KeyboardState::operator[](const Key key) const
 	{
 		return state.find(key)->second;
 	}
-	const Key& KeyboardState::keyWithMostRecentStateChange() const
+	InputState KeyboardState::stateChangeThisFrame(Key key) const
 	{
-		return mostRecentlyChangedKey;
+		auto& state = stateChangesThisFrame.find(key);
+		return state == stateChangesThisFrame.end() ? InputState::Unchanged : state->second;
 	}
 }

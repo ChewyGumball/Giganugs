@@ -54,6 +54,8 @@ namespace Giganugs::Input
 		mousePosition = glm::vec2(0, 0);
 		mouseDeltaPosition = glm::vec2(0, 0);
 		wheelTicks = 0; 
+
+		stateChangesThisFrame.clear();
 	}
 
 	void MouseState::newFrame()
@@ -66,8 +68,9 @@ namespace Giganugs::Input
 		return state.find(button)->second;
 	}
 
-	bool MouseState::changedThisFrame(MouseButton button) const
+	InputState MouseState::stateChangeThisFrame(MouseButton button) const
 	{
-		return stateChangesThisFrame.count(button) != 0;
+		auto& state = stateChangesThisFrame.find(button);
+		return state == stateChangesThisFrame.end() ? InputState::Unchanged : state->second;
 	}
 }

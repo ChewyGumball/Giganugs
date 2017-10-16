@@ -33,6 +33,6 @@ namespace Giganugs::Input
 		void newFrame();
 
 		const InputState& operator[](MouseButton button) const;
-		bool changedThisFrame(MouseButton button) const;
+		InputState stateChangeThisFrame(MouseButton button) const;
 	};
 }

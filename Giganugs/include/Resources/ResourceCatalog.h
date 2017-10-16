@@ -22,7 +22,7 @@ namespace Giganugs::Resources {
 		virtual bool reload(const std::string& filename, T& resource) = 0;
 
 	public:
-		ResourceCatalog(std::vector<std::string> resourceLocations) 
+		ResourceCatalog(const std::vector<std::string>& resourceLocations) 
 		: resourceLocations(resourceLocations) { }
 
 		virtual ~ResourceCatalog() {

@@ -193,6 +193,7 @@ namespace Giganugs::Graphics {
 	void Window::newInputFrame()
 	{
 		mouseState.newFrame();
+		keyboardState.newFrame();
 	}
 	
 

@@ -9,15 +9,16 @@ namespace Giganugs::Input
 	{
 	private:
 		std::unordered_map<Key, InputState> state;
-		Key mostRecentlyChangedKey;
+		std::unordered_map<Key, InputState> stateChangesThisFrame;
 	public:
 		KeyboardState();
 		~KeyboardState();
 
 		void setKeyState(Key key, InputState inputState);
 		void clear();
+		void newFrame();
 		
 		const InputState& operator[](Key key) const;
-		const Key& keyWithMostRecentStateChange() const;
+		InputState stateChangeThisFrame(Key key) const;
 	};
 }

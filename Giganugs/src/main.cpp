@@ -10,9 +10,11 @@
 #include "Sprites/SpriteMap.h"
 #include "Sprites/SpriteAtlas.h"
 #include "Sprites/SpriteAnimation.h"
+#include "Sprites/SpriteAnimator.h"
 
 #include "Resources/Catalogs/TextureCatalog.h"
 #include "Resources/Catalogs/SpriteAtlasCatalog.h"
+#include "Resources/Catalogs/SpriteAnimationCatalog.h"
 
 #include "Input/Clock.h"
 
@@ -33,20 +35,15 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	Giganugs::Resources::TextureCatalog textures({ "resources/sprites/images" }, renderer.getDevice());
 	Giganugs::Resources::SpriteAtlasCatalog spriteAtlases({ "resources/sprites/atlases" }, &textures);
+	Giganugs::Resources::SpriteAnimationCatalog spriteAnimations({ "resources/sprites/animations" }, &spriteAtlases);
 
 	Giganugs::Sprites::SpriteAtlas* dogs = spriteAtlases.locate("dogs.atlas");
-	Giganugs::Sprites::SpriteAtlas* floors = spriteAtlases.locate("wood_floors.atlas");
 	Giganugs::Sprites::SpriteAtlas* counters = spriteAtlases.locate("counters.atlas");
-
-	Giganugs::Sprites::SpriteAnimation brownDown("resources/sprites/animations/dog_brown_walk_down.anim", dogs);
-	Giganugs::Sprites::SpriteAnimation greyDown("resources/sprites/animations/dog_grey_walk_up.anim", dogs);
-	Giganugs::Sprites::SpriteAnimation tanRight("resources/sprites/animations/dog_tan_walk_right.anim", dogs);
-	Giganugs::Sprites::SpriteAnimation shiftLeft("resources/sprites/animations/dog_shirt_walk_left.anim", dogs);
 
 	Giganugs::Graphics::Camera camera(0.f, 400.f, 0.f, 400.f, 0.f, 1.f);
 	renderer.setCamera(camera);
 
-	Giganugs::Sprites::SpriteMap map(100, 100, 32, floors);
+	Giganugs::Sprites::SpriteMap map(100, 100, 32, spriteAtlases.locate("wood_floors.atlas"));
 	for (int x = 0; x < 100; x++) {
 		for (int y = 0; y < 100; y++) {
 			map.setAtTileCoordinates(x, y, (x / 10) + (y / 10));
@@ -57,25 +54,23 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	Giganugs::Sprites::SpriteMap machines(100, 100, 32, counters);
 
 	Giganugs::Game::Factory factory(map, machines);
-
-
-	uint32_t timer = 0;
-	uint32_t currentFrame = 0;
-
-	std::vector<Giganugs::Sprites::SpriteInstanceData> parts;
-	parts.push_back({ 0, 0, 32, 32, dogs->part(brownDown.frames[currentFrame]) });
-	parts.push_back({ 32, 32, 32, 32, dogs->part(greyDown.frames[currentFrame]) });
-	parts.push_back({ 32, 0, 32, 32, dogs->part(tanRight.frames[currentFrame]) });
-	parts.push_back({ 0, 32, 32, 32, dogs->part(shiftLeft.frames[currentFrame]) });
 	
-
 	Giganugs::Input::Clock gameClock;
 	Giganugs::Input::Clock systemClock;
 
-	Giganugs::Game::Context context{ &window.mouse(), &window.keyboard(), &gameClock, &systemClock };
-	std::chrono::high_resolution_clock clock;
-	
-	auto previousTime = clock.now();
+	Giganugs::Sprites::SpriteAnimator brownDogAnimator(spriteAnimations.locate("dog_brown_walk_down.anim"), gameClock.createTimer());
+	Giganugs::Sprites::SpriteAnimator greyDogAnimator(spriteAnimations.locate("dog_grey_walk_up.anim"), gameClock.createTimer());
+	Giganugs::Sprites::SpriteAnimator tanDogAnimator(spriteAnimations.locate("dog_tan_walk_right.anim"), gameClock.createTimer());
+	Giganugs::Sprites::SpriteAnimator shirtDogAnimator(spriteAnimations.locate("dog_shirt_walk_left.anim"), gameClock.createTimer());
+
+	std::vector<Giganugs::Sprites::SpriteInstanceData> parts;
+	parts.push_back({ 0, 0, 32, 32, dogs->part(brownDogAnimator.currentFrameIndex()) });
+	parts.push_back({ 32, 32, 32, 32, dogs->part(greyDogAnimator.currentFrameIndex()) });
+	parts.push_back({ 32, 0, 32, 32, dogs->part(tanDogAnimator.currentFrameIndex()) });
+	parts.push_back({ 0, 32, 32, 32, dogs->part(shirtDogAnimator.currentFrameIndex()) });
+
+
+	Giganugs::Game::Context context{ &window.mouse(), &window.keyboard(), &gameClock, &systemClock };	
 
 	float speed = 128;
 
@@ -97,18 +92,12 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 			auto& timeDelta = context.gameClock->deltaTickTime();
 
-			timer++;
-
 			Util::File::MonitorFiles();
 
-			bool updateBatch = false;
-			if (timer % 1000 == 0) {
-				currentFrame = (currentFrame + 1) % brownDown.frames.size();
-				parts[0].atlasData = dogs->part(brownDown.frames[currentFrame]);
-				parts[1].atlasData = dogs->part(greyDown.frames[currentFrame]);
-				parts[2].atlasData = dogs->part(tanRight.frames[currentFrame]);
-				parts[3].atlasData = dogs->part(shiftLeft.frames[currentFrame]);
-			}
+			parts[0].atlasData = dogs->part(brownDogAnimator.currentFrameIndex());
+			parts[1].atlasData = dogs->part(greyDogAnimator.currentFrameIndex());
+			parts[2].atlasData = dogs->part(tanDogAnimator.currentFrameIndex());
+			parts[3].atlasData = dogs->part(shirtDogAnimator.currentFrameIndex());
 
 			if (window.keyboard()[Giganugs::Input::Key::D] == Giganugs::Input::InputState::Pressed) {
 				camera.move(glm::vec2(speed * timeDelta.count(), 0.f));
@@ -125,7 +114,7 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 				camera.move(glm::vec2(0.f, -speed * timeDelta.count()));
 			}
 
-			if (window.mouse()[Giganugs::Input::MouseButton::Left] == Giganugs::Input::InputState::Pressed && window.mouse().changedThisFrame(Giganugs::Input::MouseButton::Left)) {
+			if (window.mouse().stateChangeThisFrame(Giganugs::Input::MouseButton::Left) == Giganugs::Input::InputState::Pressed) {
 				glm::vec2 realPosition = camera.unproject(window.mouse().position());
 				factory.setMachine(realPosition.x, realPosition.y, counterIndex++);
 
@@ -134,10 +123,10 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 				}
 			}
 
-			if (window.keyboard()[Giganugs::Input::Key::P] == Giganugs::Input::InputState::Pressed) {
+			if (window.keyboard().stateChangeThisFrame(Giganugs::Input::Key::P) == Giganugs::Input::InputState::Pressed) {
 				gameClock.pause();
 			}
-			if (window.keyboard()[Giganugs::Input::Key::U] == Giganugs::Input::InputState::Pressed) {
+			if (window.keyboard().stateChangeThisFrame(Giganugs::Input::Key::U) == Giganugs::Input::InputState::Pressed) {
 				gameClock.resume();
 			}
 

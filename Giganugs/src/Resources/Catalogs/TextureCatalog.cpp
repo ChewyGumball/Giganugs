@@ -3,7 +3,7 @@
 
 namespace Giganugs::Resources {
 
-	TextureCatalog::TextureCatalog(std::vector<std::string> resourceLocations, Microsoft::WRL::ComPtr<ID3D11Device> device)
+	TextureCatalog::TextureCatalog(const std::vector<std::string>& resourceLocations, Microsoft::WRL::ComPtr<ID3D11Device> device)
 		:ResourceCatalog<Graphics::Texture>(resourceLocations), device(device)
 	{
 	}

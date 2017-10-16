@@ -81,6 +81,7 @@ namespace Giganugs::Input
 		Middle
 	};
 	enum class InputState {
+		Unchanged,
 		Pressed,
 		Released
 	};

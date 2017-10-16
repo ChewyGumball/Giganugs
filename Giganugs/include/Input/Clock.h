@@ -1,6 +1,9 @@
 #pragma once
 #include <chrono>
+#include <vector>
 namespace Giganugs::Input {
+	class Timer;
+
 	class Clock
 	{
 		std::chrono::steady_clock clock;
@@ -8,6 +11,8 @@ namespace Giganugs::Input {
 		std::chrono::steady_clock::time_point currentTick;
 		std::chrono::steady_clock::duration elapsedTime;
 		bool paused;
+
+		std::vector<Timer*> timers;
 
 	public:
 		Clock();
@@ -20,6 +25,9 @@ namespace Giganugs::Input {
 
 		std::chrono::duration<float> deltaTickTime() const;
 		std::chrono::duration<float> totalElapsedTime() const;
+
+		const Timer* createTimer();
+		void removeTimer(Timer* timer);
 	};
 }
 

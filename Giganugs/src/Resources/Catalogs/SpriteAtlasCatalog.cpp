@@ -5,7 +5,7 @@
 
 namespace Giganugs::Resources {
 
-	SpriteAtlasCatalog::SpriteAtlasCatalog(std::vector<std::string> resourceLocations, TextureCatalog* textureCatalog)
+	SpriteAtlasCatalog::SpriteAtlasCatalog(const std::vector<std::string>& resourceLocations, TextureCatalog* textureCatalog)
 		:ResourceCatalog<Sprites::SpriteAtlas>(resourceLocations), textureCatalog(textureCatalog)
 	{
 	}

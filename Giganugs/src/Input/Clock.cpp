@@ -1,5 +1,8 @@
 #include "Input/Clock.h"
 
+#include "Input/Timer.h"
+
+#include <algorithm>
 
 namespace Giganugs::Input {
 	Clock::Clock() : previousTick(clock.now()), currentTick(clock.now()), elapsedTime(0), paused(false)
@@ -24,7 +27,13 @@ namespace Giganugs::Input {
 		if (!paused) {
 			previousTick = currentTick;
 			currentTick = clock.now();
-			elapsedTime += currentTick - previousTick;
+
+			auto delta = currentTick - previousTick;
+			elapsedTime += delta;
+
+			for (auto& timer : timers) {
+				timer->update(delta);
+			}
 		}
 
 		return deltaTickTime();
@@ -36,5 +45,18 @@ namespace Giganugs::Input {
 	std::chrono::duration<float> Clock::totalElapsedTime() const
 	{
 		return elapsedTime;
+	}
+	const Timer * Clock::createTimer()
+	{
+		Timer* timer = new Timer();
+		timers.push_back(timer);
+		return timer;
+	}
+	void Clock::removeTimer(Timer* timer)
+	{
+		auto element = std::find(timers.begin(), timers.end(), timer);
+		timers.erase(element);
+
+		delete timer;
 	}
 }
