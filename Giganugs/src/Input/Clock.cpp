@@ -1,9 +1,5 @@
 #include "Input/Clock.h"
 
-#include "Input/Timer.h"
-
-#include <algorithm>
-
 namespace Giganugs::Input {
 	Clock::Clock() : previousTick(clock.now()), currentTick(clock.now()), elapsedTime(0), paused(false)
 	{
@@ -22,41 +18,27 @@ namespace Giganugs::Input {
 	{
 		paused = false;
 	}
-	std::chrono::duration<float> Clock::tick()
+	void Clock::tick()
 	{
 		if (!paused) {
 			previousTick = currentTick;
 			currentTick = clock.now();
-
-			auto delta = currentTick - previousTick;
-			elapsedTime += delta;
-
-			for (auto& timer : timers) {
-				timer->update(delta);
-			}
+			elapsedTime += currentTick - previousTick;
 		}
-
-		return deltaTickTime();
 	}
-	std::chrono::duration<float> Clock::deltaTickTime() const
+
+	std::chrono::duration<float> Clock::deltaTickSeconds() const
 	{
 		return currentTick - previousTick;
 	}
-	std::chrono::duration<float> Clock::totalElapsedTime() const
+
+	std::chrono::steady_clock::duration Clock::totalElapsedTime() const
 	{
 		return elapsedTime;
 	}
-	const Timer * Clock::createTimer()
-	{
-		Timer* timer = new Timer();
-		timers.push_back(timer);
-		return timer;
-	}
-	void Clock::removeTimer(Timer* timer)
-	{
-		auto element = std::find(timers.begin(), timers.end(), timer);
-		timers.erase(element);
 
-		delete timer;
+	std::chrono::duration<float> Clock::totalElapsedSeconds() const
+	{
+		return elapsedTime;
 	}
 }

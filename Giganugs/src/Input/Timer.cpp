@@ -1,9 +1,12 @@
 #include "Input/Timer.h"
 
+#include "Input/Clock.h"
+
 namespace Giganugs::Input {
 
-	Timer::Timer() : elapsedTime(0)
+	Timer::Timer(const Clock* clock) : clock(clock)
 	{
+		restart();
 	}
 
 
@@ -11,13 +14,13 @@ namespace Giganugs::Input {
 	{
 	}
 
-	void Timer::update(const std::chrono::steady_clock::duration & delta)
+	void Timer::restart()
 	{
-		elapsedTime += delta;
+		startTime = clock->totalElapsedTime();
 	}
 
 	std::chrono::duration<float> Timer::elapsedSeconds() const
 	{
-		return elapsedTime;
+		return clock->totalElapsedTime() - startTime;
 	}
 }

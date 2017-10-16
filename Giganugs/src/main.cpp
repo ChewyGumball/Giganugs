@@ -17,6 +17,7 @@
 #include "Resources/Catalogs/SpriteAnimationCatalog.h"
 
 #include "Input/Clock.h"
+#include "Input/Timer.h"
 
 #include "Game/Context.h"
 #include "Game/Factory.h"
@@ -58,10 +59,12 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	Giganugs::Input::Clock gameClock;
 	Giganugs::Input::Clock systemClock;
 
-	Giganugs::Sprites::SpriteAnimator brownDogAnimator(spriteAnimations.locate("dog_brown_walk_down.anim"), gameClock.createTimer());
-	Giganugs::Sprites::SpriteAnimator greyDogAnimator(spriteAnimations.locate("dog_grey_walk_up.anim"), gameClock.createTimer());
-	Giganugs::Sprites::SpriteAnimator tanDogAnimator(spriteAnimations.locate("dog_tan_walk_right.anim"), gameClock.createTimer());
-	Giganugs::Sprites::SpriteAnimator shirtDogAnimator(spriteAnimations.locate("dog_shirt_walk_left.anim"), gameClock.createTimer());
+	Giganugs::Input::Timer timer(&gameClock);
+
+	Giganugs::Sprites::SpriteAnimator brownDogAnimator(spriteAnimations.locate("dog_brown_walk_down.anim"), &timer);
+	Giganugs::Sprites::SpriteAnimator greyDogAnimator(spriteAnimations.locate("dog_grey_walk_up.anim"), &timer);
+	Giganugs::Sprites::SpriteAnimator tanDogAnimator(spriteAnimations.locate("dog_tan_walk_right.anim"), &timer);
+	Giganugs::Sprites::SpriteAnimator shirtDogAnimator(spriteAnimations.locate("dog_shirt_walk_left.anim"), &timer);
 
 	std::vector<Giganugs::Sprites::SpriteInstanceData> parts;
 	parts.push_back({ 0, 0, 32, 32, dogs->part(brownDogAnimator.currentFrameIndex()) });
@@ -90,7 +93,7 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			gameClock.tick();
 			systemClock.tick();
 
-			auto& timeDelta = context.gameClock->deltaTickTime();
+			auto& timeDelta = context.gameClock->deltaTickSeconds();
 
 			Util::File::MonitorFiles();
 

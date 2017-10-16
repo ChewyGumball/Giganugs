@@ -2,15 +2,18 @@
 #include <chrono>
 
 namespace Giganugs::Input {
+	class Clock;
+
 	class Timer
 	{
-		std::chrono::steady_clock::duration elapsedTime;
+		std::chrono::steady_clock::duration startTime;
+		const Clock* clock;
+
 	public:
-		Timer();
+		Timer(const Clock* clock);
 		~Timer();
 
-		void update(const std::chrono::steady_clock::duration& delta);
-
+		void restart();
 		std::chrono::duration<float> elapsedSeconds() const;
 	};
 }

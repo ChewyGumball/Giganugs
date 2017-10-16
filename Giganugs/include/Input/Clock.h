@@ -11,9 +11,7 @@ namespace Giganugs::Input {
 		std::chrono::steady_clock::time_point currentTick;
 		std::chrono::steady_clock::duration elapsedTime;
 		bool paused;
-
-		std::vector<Timer*> timers;
-
+		
 	public:
 		Clock();
 		~Clock();
@@ -21,13 +19,11 @@ namespace Giganugs::Input {
 		void pause();
 		void resume();
 
-		std::chrono::duration<float> tick();
+		void tick();
 
-		std::chrono::duration<float> deltaTickTime() const;
-		std::chrono::duration<float> totalElapsedTime() const;
-
-		const Timer* createTimer();
-		void removeTimer(Timer* timer);
+		std::chrono::duration<float> deltaTickSeconds() const;
+		std::chrono::steady_clock::duration totalElapsedTime() const;
+		std::chrono::duration<float> totalElapsedSeconds() const;
 	};
 }
 
