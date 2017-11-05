@@ -28,10 +28,12 @@ namespace Giganugs::Graphics {
 		PixelShader pixelShader;
 
 	public:
-		SpriteShader(Microsoft::WRL::ComPtr<ID3D11Device> device);
+		const int MaxBatchSize;
+
+		SpriteShader(Microsoft::WRL::ComPtr<ID3D11Device> device, int maxBatchSize);
 		~SpriteShader();
 
-		void setBatch(const Giganugs::Sprites::SpriteBatch& batch, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
+		void setBatch(const Giganugs::Sprites::SpriteBatch& batch, int start, int count, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
 
 		void Set(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context);
 	};

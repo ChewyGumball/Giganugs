@@ -17,7 +17,7 @@ namespace Giganugs::Resources {
 
 	protected:
 		// Inherited via ResourceCatalog
-		virtual Graphics::Texture* create(const std::string & filename, uint32_t ID) override;
-		virtual bool reload(const std::string & filename, Graphics::Texture& resource) override;
+		virtual Graphics::Texture* create(const std::string & filename, uint32_t ID) const override;
+		virtual bool reload(const std::string & filename, Graphics::Texture& resource) const override;
 	};
 }

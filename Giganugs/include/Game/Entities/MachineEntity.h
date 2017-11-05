@@ -3,10 +3,21 @@
 #include "Game/Entities/Entity.h"
 namespace Giganugs::Game::Entities {
 
+	enum Counters {
+		EmptySink,
+		FullSink,
+		EmptyCuttingBoard,
+		ChickenCuttingBoard,
+		OvenOpen,
+		OvenClosed
+	};
+
 	class MachineEntity : public Entity
 	{
+	private:
+
 	public:
-		MachineEntity();
+		MachineEntity(Counters type);
 		~MachineEntity();
 	};
 }

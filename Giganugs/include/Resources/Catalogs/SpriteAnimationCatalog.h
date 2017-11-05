@@ -17,7 +17,7 @@ namespace Giganugs::Resources {
 
 	protected:
 		// Inherited via ResourceCatalog
-		virtual Sprites::SpriteAnimation * create(const std::string & filename, uint32_t ID) override;
-		virtual bool reload(const std::string & filename, Sprites::SpriteAnimation & resource) override;
+		virtual Sprites::SpriteAnimation * create(const std::string & filename, uint32_t ID) const override;
+		virtual bool reload(const std::string & filename, Sprites::SpriteAnimation & resource) const override;
 	};
 }

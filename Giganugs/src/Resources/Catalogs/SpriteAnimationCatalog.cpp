@@ -11,11 +11,11 @@ namespace Giganugs::Resources {
 	SpriteAnimationCatalog::~SpriteAnimationCatalog()
 	{
 	}
-	Sprites::SpriteAnimation * SpriteAnimationCatalog::create(const std::string & filename, uint32_t ID)
+	Sprites::SpriteAnimation * SpriteAnimationCatalog::create(const std::string & filename, uint32_t ID) const
 	{
 		return new Sprites::SpriteAnimation(ID, filename, spriteAtlasCatalog);
 	}
-	bool SpriteAnimationCatalog::reload(const std::string & filename, Sprites::SpriteAnimation & resource)
+	bool SpriteAnimationCatalog::reload(const std::string & filename, Sprites::SpriteAnimation & resource) const
 	{
 		return resource.reload(filename, spriteAtlasCatalog);
 	}

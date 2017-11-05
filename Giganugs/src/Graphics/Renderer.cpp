@@ -1,4 +1,5 @@
 #include "Graphics/Renderer.h"
+
 #include "Graphics/Window.h"
 #include "Graphics/VertexBufferDefinition.h"
 #include "Graphics/VertexBuffer.h"
@@ -9,9 +10,11 @@
 #include <DirectXPackedVector.h>
 #include <d3dcompiler.h>
 
+#include <algorithm>
 
 #include "lib/glm/glm.hpp"
 #include "lib/glm/gtc/matrix_transform.hpp"
+
 
 using Microsoft::WRL::ComPtr;
 
@@ -54,7 +57,7 @@ namespace Giganugs::Graphics {
 		viewport.Height = static_cast<float>(window->Height());
 		context->RSSetViewports(1, &viewport);
 		
-		spriteShader = new SpriteShader(device);
+		spriteShader = new SpriteShader(device, 1000);
 		spriteShader->Set(context);
 		
 		D3D11_SAMPLER_DESC samplerDescription = {};
@@ -101,13 +104,7 @@ namespace Giganugs::Graphics {
 		context->PSSetShaderResources(0, 1, texture.GetAddressOf());
 		context->PSSetSamplers(0, 1, defaultSampler.GetAddressOf());
 	}
-
-	void Renderer::setBatch(const Giganugs::Sprites::SpriteBatch& batch)
-	{
-		setTexture(batch.atlas->texture()->view());
-		spriteShader->setBatch(batch, context);
-	}
-
+	
 	void Renderer::setCamera(const Camera & camera)
 	{
 		D3D11_MAPPED_SUBRESOURCE mapped;
@@ -128,8 +125,14 @@ namespace Giganugs::Graphics {
 
 	void Renderer::Draw(const Sprites::SpriteBatch & batch)
 	{
-		setBatch(batch);
-		Draw(batch.instances.size());
+		setTexture(batch.atlas->texture()->view());
+		int instanceCount = batch.instanceData().size();
+		int maxBatchSize = spriteShader->MaxBatchSize;
+		for (int i = 0; i < instanceCount; i += maxBatchSize) {
+			int batchCount = std::min(instanceCount - i, maxBatchSize);
+			spriteShader->setBatch(batch, i, batchCount, context);
+			Draw(batchCount);
+		}
 	}
 
 	void Renderer::Clear()

@@ -3,7 +3,7 @@
 
 namespace Giganugs::Game::Entities {
 
-	MachineEntity::MachineEntity()
+	MachineEntity::MachineEntity(Counters type)
 		:Entity(glm::vec2(), glm::vec2())
 	{
 	}

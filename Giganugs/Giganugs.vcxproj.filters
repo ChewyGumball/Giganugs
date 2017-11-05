@@ -129,6 +129,9 @@
     <ClCompile Include="src\Resources\Catalogs\SpriteAnimationCatalog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Sprites\SpriteBatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Graphics\Renderer.h">
@@ -684,6 +687,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Resources\Catalogs\SpriteAnimationCatalog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Sprites\SpriteBatcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

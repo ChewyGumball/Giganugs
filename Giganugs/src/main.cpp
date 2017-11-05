@@ -53,6 +53,11 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 
 	Giganugs::Sprites::SpriteMap machines(100, 100, 32, counters);
+	for (int x = 0; x < 8; x++) {
+		for (int y = 0; y < 8; y++) {
+			machines.setAtTileCoordinates(x + 5, y + 5, x * 8 + y);
+		}
+	}
 
 	Giganugs::Game::Factory factory(map, machines);
 	
@@ -79,6 +84,9 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	int32_t counterIndex = 0;
 
+	std::vector<Giganugs::Game::Entities::Entity*> entities; 
+	Giganugs::Sprites::SpriteBatch partsBatch(dogs);
+
 
 	MSG message;
 	bool running = true;
@@ -101,6 +109,12 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			parts[1].atlasData = dogs->part(greyDogAnimator.currentFrameIndex());
 			parts[2].atlasData = dogs->part(tanDogAnimator.currentFrameIndex());
 			parts[3].atlasData = dogs->part(shirtDogAnimator.currentFrameIndex());
+
+			partsBatch.clear();
+			partsBatch.add(parts[0]);
+			partsBatch.add(parts[1]);
+			partsBatch.add(parts[2]);
+			partsBatch.add(parts[3]);
 
 			if (window.keyboard()[Giganugs::Input::Key::D] == Giganugs::Input::InputState::Pressed) {
 				camera.move(glm::vec2(speed * timeDelta.count(), 0.f));
@@ -133,13 +147,17 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 				gameClock.resume();
 			}
 
+			for (auto entity : entities) {
+				entity->Update(timeDelta, context);
+			}
+
 			renderer.Clear();
 
 			renderer.setCamera(camera);
 
 			factory.Draw(renderer, camera);
 
-			renderer.Draw({ dogs, parts });
+			renderer.Draw(partsBatch);
 
 			renderer.Swap();
 

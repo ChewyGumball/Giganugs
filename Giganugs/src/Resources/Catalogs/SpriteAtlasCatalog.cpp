@@ -15,12 +15,12 @@ namespace Giganugs::Resources {
 	{
 	}
 
-	Sprites::SpriteAtlas* Giganugs::Resources::SpriteAtlasCatalog::create(const std::string & filename, uint32_t ID)
+	Sprites::SpriteAtlas* Giganugs::Resources::SpriteAtlasCatalog::create(const std::string & filename, uint32_t ID) const
 	{
 		return new Sprites::SpriteAtlas(ID, filename, textureCatalog);
 	}
 
-	bool Giganugs::Resources::SpriteAtlasCatalog::reload(const std::string & filename, Sprites::SpriteAtlas& resource)
+	bool Giganugs::Resources::SpriteAtlasCatalog::reload(const std::string & filename, Sprites::SpriteAtlas& resource) const
 	{
 		return resource.reload(filename, textureCatalog);
 	}

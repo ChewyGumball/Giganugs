@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Sprites\SpriteBatcher.cpp" />
     <ClCompile Include="src\Resources\Catalogs\SpriteAnimationCatalog.cpp" />
     <ClCompile Include="src\Sprites\SpriteAnimator.cpp" />
     <ClCompile Include="src\Input\Clock.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="include\Sprites\SpriteAnimator.h" />
     <ClInclude Include="include\Input\Timer.h" />
     <ClInclude Include="include\Resources\Catalogs\SpriteAnimationCatalog.h" />
+    <ClInclude Include="include\Sprites\SpriteBatcher.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\lib\glm\detail\func_common.inl" />

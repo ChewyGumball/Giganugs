@@ -13,12 +13,12 @@ namespace Giganugs::Resources {
 	{
 	}
 
-	Graphics::Texture* Giganugs::Resources::TextureCatalog::create(const std::string & filename, uint32_t ID)
+	Graphics::Texture* Giganugs::Resources::TextureCatalog::create(const std::string & filename, uint32_t ID) const
 	{
 		return new Graphics::Texture(ID, filename, device);
 	}
 
-	bool Giganugs::Resources::TextureCatalog::reload(const std::string & filename, Graphics::Texture& resource)
+	bool Giganugs::Resources::TextureCatalog::reload(const std::string & filename, Graphics::Texture& resource) const
 	{
 		return resource.reload(filename, device);
 	}

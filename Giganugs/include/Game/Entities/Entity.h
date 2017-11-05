@@ -2,6 +2,10 @@
 #include <chrono>
 #include "lib/glm/glm.hpp"
 
+namespace Giganugs::Game {
+	struct Context;
+}
+
 namespace Giganugs::Game::Entities {
 	class Entity
 	{
@@ -13,6 +17,6 @@ namespace Giganugs::Game::Entities {
 		Entity(const glm::vec2& position, const glm::vec2& bounds);
 		~Entity();
 
-		virtual void Update(std::chrono::duration<float> timeDelta) = 0;
+		virtual void Update(std::chrono::duration<float> timeDelta, Context& context) = 0;
 	};
 }

@@ -12,14 +12,14 @@ namespace Giganugs::Resources {
 	class ResourceCatalog
 	{
 	private:
-		uint32_t nextID = 0;
+		mutable uint32_t nextID = 0;
 		std::vector<std::string> resourceLocations; 
-		std::unordered_map<std::string, ResourceTag<T>> resourceNames;
-		std::unordered_map<ResourceTag<T>, T*> resources;
+		mutable std::unordered_map<std::string, ResourceTag<T>> resourceNames;
+		mutable std::unordered_map<ResourceTag<T>, T*> resources;
 
 	protected:
-		virtual T* create(const std::string& filename, uint32_t ID) = 0;
-		virtual bool reload(const std::string& filename, T& resource) = 0;
+		virtual T* create(const std::string& filename, uint32_t ID) const = 0;
+		virtual bool reload(const std::string& filename, T& resource) const = 0;
 
 	public:
 		ResourceCatalog(const std::vector<std::string>& resourceLocations) 
@@ -31,7 +31,7 @@ namespace Giganugs::Resources {
 			}
 		}
 
-		T* locate(const std::string& resourceName) {
+		T* locate(const std::string& resourceName) const {
 			if (resourceNames.count(resourceName) == 0) {
 				bool found = false;
 				for (auto& path : resourceLocations) {
@@ -55,11 +55,12 @@ namespace Giganugs::Resources {
 		}
 
 		T* get(const ResourceTag<T>& tag) {
-			if (resources.count(tag) == 0) {
+			auto resource = resources.find(tag);
+			if (resource == resources.end()) {
 				return nullptr;
 			}
 			else {
-				return resources[tag];
+				return resource->second;
 			}
 		}
 	};
