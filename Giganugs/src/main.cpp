@@ -68,7 +68,7 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	Giganugs::Input::Timer timer(&gameClock);
 
-	Giganugs::Game::Entities::PlayerEntity player("dog_grey", &spriteAnimations, &timer, Giganugs::Right);
+	Giganugs::Game::Entities::PlayerEntity player("dog_grey", &spriteAnimations, &gameClock, Giganugs::Right);
 	player.move(Giganugs::Right, 32);
 	player.move(Giganugs::Up, 32);
 
@@ -110,18 +110,8 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 			Util::File::MonitorFiles();
 
-			if (window.keyboard()[Giganugs::Input::Key::RightArrow] == Giganugs::Input::InputState::Pressed) {
-				player.move(Giganugs::Right, speed * timeDelta.count());
-			}
-			if (window.keyboard()[Giganugs::Input::Key::LeftArrow] == Giganugs::Input::InputState::Pressed) {
-				player.move(Giganugs::Left, speed * timeDelta.count());
-			}
-			if (window.keyboard()[Giganugs::Input::Key::UpArrow] == Giganugs::Input::InputState::Pressed) {
-				player.move(Giganugs::Up, speed * timeDelta.count());
-			}
-			if (window.keyboard()[Giganugs::Input::Key::DownArrow] == Giganugs::Input::InputState::Pressed) {
-				player.move(Giganugs::Down, speed * timeDelta.count());
-			}
+			player.Update(timeDelta, context);
+
 
 			parts[0].atlasData = dogs->part(brownDogAnimator.currentFrameIndex());
 			parts[1].atlasData = dogs->part(player.currentAnimator().currentFrameIndex());

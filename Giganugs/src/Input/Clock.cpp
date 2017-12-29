@@ -9,6 +9,11 @@ namespace Giganugs::Input {
 	Clock::~Clock()
 	{
 	}
+	bool Clock::isRunning() const
+	{
+		return !paused;
+	}
+
 	void Clock::pause()
 	{
 		paused = true;

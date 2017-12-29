@@ -4,9 +4,8 @@
 
 namespace Giganugs::Input {
 
-	Timer::Timer(const Clock* clock) : clock(clock)
+	Timer::Timer(const Clock* clock) : clock(clock), running(true), startTime(clock->totalElapsedTime())
 	{
-		restart();
 	}
 
 
@@ -14,13 +13,28 @@ namespace Giganugs::Input {
 	{
 	}
 
+	bool Timer::isRunning() const
+	{
+		return running;
+	}
+
+	void Timer::stop() {
+		running = false;
+	}
+
 	void Timer::restart()
 	{
 		startTime = clock->totalElapsedTime();
+		running = true;
 	}
 
 	std::chrono::duration<float> Timer::elapsedSeconds() const
 	{
-		return clock->totalElapsedTime() - startTime;
+		if (running) {
+			return clock->totalElapsedTime() - startTime;
+		}
+		else {
+			return std::chrono::duration<float>::zero();
+		}
 	}
 }

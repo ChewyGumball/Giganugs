@@ -18,6 +18,8 @@ namespace Giganugs::Input {
 		Clock();
 		~Clock();
 
+		bool isRunning() const;
+
 		void pause();
 		void resume();
 
