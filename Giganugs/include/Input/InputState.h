@@ -72,8 +72,10 @@ namespace Giganugs::Input
 		F10,
 		NumLock,
 		ScrollLock,
-
-
+		LeftArrow,
+		RightArrow,
+		UpArrow,
+		DownArrow,
 	};
 	enum class MouseButton {
 		Left,

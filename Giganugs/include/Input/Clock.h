@@ -6,6 +6,8 @@ namespace Giganugs::Input {
 
 	class Clock
 	{
+		//Add speed multiplier? 
+
 		std::chrono::steady_clock clock;
 		std::chrono::steady_clock::time_point previousTick;
 		std::chrono::steady_clock::time_point currentTick;

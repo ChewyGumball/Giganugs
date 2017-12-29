@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Game\Data\MachineData.cpp" />
+    <ClCompile Include="src\Game\Data\Recipe.cpp" />
     <ClCompile Include="src\Sprites\SpriteBatcher.cpp" />
     <ClCompile Include="src\Resources\Catalogs\SpriteAnimationCatalog.cpp" />
     <ClCompile Include="src\Sprites\SpriteAnimator.cpp" />
@@ -59,6 +61,7 @@
     <ClCompile Include="src\Input\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Game\Data\Direction.h" />
     <ClInclude Include="include\Input\Clock.h" />
     <ClInclude Include="include\Game\Context.h" />
     <ClInclude Include="include\Game\Entities\Entity.h" />
@@ -245,6 +248,8 @@
     <ClInclude Include="include\Input\Timer.h" />
     <ClInclude Include="include\Resources\Catalogs\SpriteAnimationCatalog.h" />
     <ClInclude Include="include\Sprites\SpriteBatcher.h" />
+    <ClInclude Include="include\Game\Data\Recipe.h" />
+    <ClInclude Include="include\Game\Data\MachineData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\lib\glm\detail\func_common.inl" />

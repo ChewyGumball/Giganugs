@@ -12,4 +12,8 @@ namespace Giganugs::Game::Entities {
 	Entity::~Entity()
 	{
 	}
+	glm::vec2 Entity::position() const
+	{
+		return m_position;
+	}
 }

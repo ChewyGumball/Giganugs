@@ -32,6 +32,18 @@ namespace {
 
 	void processKeyDown(WPARAM wparam, Giganugs::Input::KeyboardState& keyboard) {
 		switch (wparam) {
+		case 0x25: // left arrow
+			keyboard.setKeyState(Key::LeftArrow, InputState::Pressed);
+			break;
+		case 0x26: // up arrow
+			keyboard.setKeyState(Key::UpArrow, InputState::Pressed);
+			break;
+		case 0x27: // right arrow
+			keyboard.setKeyState(Key::RightArrow, InputState::Pressed);
+			break;
+		case 0x28: // down arrow
+			keyboard.setKeyState(Key::DownArrow, InputState::Pressed);
+			break;
 		case 0x30: // 0
 			keyboard.setKeyState(Key::Zero, InputState::Pressed);
 			break;
@@ -58,6 +70,18 @@ namespace {
 
 	void processKeyUp(WPARAM wparam, Giganugs::Input::KeyboardState& keyboard) {
 		switch (wparam) {
+		case 0x25: // left arrow
+			keyboard.setKeyState(Key::LeftArrow, InputState::Released);
+			break;
+		case 0x26: // up arrow
+			keyboard.setKeyState(Key::UpArrow, InputState::Released);
+			break;
+		case 0x27: // right arrow
+			keyboard.setKeyState(Key::RightArrow, InputState::Released);
+			break;
+		case 0x28: // down arrow
+			keyboard.setKeyState(Key::DownArrow, InputState::Released);
+			break;
 		case 0x30: // 0
 			keyboard.setKeyState(Key::Zero, InputState::Released);
 			break;

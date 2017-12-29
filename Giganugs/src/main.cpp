@@ -22,6 +22,8 @@
 #include "Game/Context.h"
 #include "Game/Factory.h"
 
+#include "Game/Entities/PlayerEntity.h"
+
 #include "Util/FileUtils.h"
 
 
@@ -66,14 +68,17 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	Giganugs::Input::Timer timer(&gameClock);
 
+	Giganugs::Game::Entities::PlayerEntity player("dog_grey", &spriteAnimations, &timer, Giganugs::Right);
+	player.move(Giganugs::Right, 32);
+	player.move(Giganugs::Up, 32);
+
 	Giganugs::Sprites::SpriteAnimator brownDogAnimator(spriteAnimations.locate("dog_brown_walk_down.anim"), &timer);
-	Giganugs::Sprites::SpriteAnimator greyDogAnimator(spriteAnimations.locate("dog_grey_walk_up.anim"), &timer);
 	Giganugs::Sprites::SpriteAnimator tanDogAnimator(spriteAnimations.locate("dog_tan_walk_right.anim"), &timer);
 	Giganugs::Sprites::SpriteAnimator shirtDogAnimator(spriteAnimations.locate("dog_shirt_walk_left.anim"), &timer);
 
 	std::vector<Giganugs::Sprites::SpriteInstanceData> parts;
 	parts.push_back({ 0, 0, 32, 32, dogs->part(brownDogAnimator.currentFrameIndex()) });
-	parts.push_back({ 32, 32, 32, 32, dogs->part(greyDogAnimator.currentFrameIndex()) });
+	parts.push_back({ player.position().x, player.position().y, 32, 32, dogs->part(player.currentAnimator().currentFrameIndex()) });
 	parts.push_back({ 32, 0, 32, 32, dogs->part(tanDogAnimator.currentFrameIndex()) });
 	parts.push_back({ 0, 32, 32, 32, dogs->part(shirtDogAnimator.currentFrameIndex()) });
 
@@ -105,8 +110,24 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 			Util::File::MonitorFiles();
 
+			if (window.keyboard()[Giganugs::Input::Key::RightArrow] == Giganugs::Input::InputState::Pressed) {
+				player.move(Giganugs::Right, speed * timeDelta.count());
+			}
+			if (window.keyboard()[Giganugs::Input::Key::LeftArrow] == Giganugs::Input::InputState::Pressed) {
+				player.move(Giganugs::Left, speed * timeDelta.count());
+			}
+			if (window.keyboard()[Giganugs::Input::Key::UpArrow] == Giganugs::Input::InputState::Pressed) {
+				player.move(Giganugs::Up, speed * timeDelta.count());
+			}
+			if (window.keyboard()[Giganugs::Input::Key::DownArrow] == Giganugs::Input::InputState::Pressed) {
+				player.move(Giganugs::Down, speed * timeDelta.count());
+			}
+
 			parts[0].atlasData = dogs->part(brownDogAnimator.currentFrameIndex());
-			parts[1].atlasData = dogs->part(greyDogAnimator.currentFrameIndex());
+			parts[1].atlasData = dogs->part(player.currentAnimator().currentFrameIndex());
+			parts[1].x = player.position().x;
+			parts[1].y = player.position().y;
+
 			parts[2].atlasData = dogs->part(tanDogAnimator.currentFrameIndex());
 			parts[3].atlasData = dogs->part(shirtDogAnimator.currentFrameIndex());
 

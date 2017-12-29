@@ -17,6 +17,8 @@ namespace Giganugs::Input {
 	void Clock::resume()
 	{
 		paused = false;
+		currentTick = clock.now();
+		previousTick = currentTick;
 	}
 	void Clock::tick()
 	{

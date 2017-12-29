@@ -5,6 +5,10 @@
 
 #include "Sprites/SpriteAnimator.h"
 
+#include "Game/Data/Direction.h"
+#include "Game/Item.h"
+
+
 namespace Giganugs {
 	namespace Resources {
 		class SpriteAnimationCatalog;
@@ -23,10 +27,17 @@ namespace Giganugs::Game::Entities {
 		Sprites::SpriteAnimator rightAnimation;
 
 	public:
-		PlayerEntity(const std::string& type, const Resources::SpriteAnimationCatalog* animations, const Input::Timer* timer);
+		Direction facingDirection;
+		Item carriedItem;
+
+		PlayerEntity(const std::string& type, const Resources::SpriteAnimationCatalog* animations, const Input::Timer* timer, Direction facingDirection);
 		~PlayerEntity();
 
 		// Inherited via Entity
 		virtual void Update(std::chrono::duration<float> timeDelta, Context& context) override;
+
+		void move(Direction direction, float distance);
+
+		const Sprites::SpriteAnimator& currentAnimator() const;
 	};
 }

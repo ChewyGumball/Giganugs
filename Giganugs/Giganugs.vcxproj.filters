@@ -132,6 +132,12 @@
     <ClCompile Include="src\Sprites\SpriteBatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\Data\MachineData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Data\Recipe.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Graphics\Renderer.h">
@@ -690,6 +696,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Sprites\SpriteBatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Data\MachineData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Data\Recipe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Data\Direction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

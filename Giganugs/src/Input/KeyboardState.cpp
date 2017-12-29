@@ -76,6 +76,10 @@ namespace Giganugs::Input
 		state[Key::F10] = InputState::Released;
 		state[Key::NumLock] = InputState::Released;
 		state[Key::ScrollLock] = InputState::Released;
+		state[Key::LeftArrow] = InputState::Released;
+		state[Key::RightArrow] = InputState::Released;
+		state[Key::DownArrow] = InputState::Released;
+		state[Key::UpArrow] = InputState::Released;
 	}
 
 	KeyboardState::~KeyboardState()
