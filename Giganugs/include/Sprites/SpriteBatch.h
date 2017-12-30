@@ -13,7 +13,7 @@ namespace Giganugs::Sprites {
 	public:
 		const SpriteAtlas* atlas;
 
-		SpriteBatch(SpriteAtlas* atlas);
+		SpriteBatch(const SpriteAtlas* atlas);
 		~SpriteBatch();
 
 		void clear();

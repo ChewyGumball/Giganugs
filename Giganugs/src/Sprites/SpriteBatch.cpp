@@ -2,7 +2,7 @@
 #include "Sprites/SpriteAtlas.h"
 
 namespace Giganugs::Sprites {
-	SpriteBatch::SpriteBatch(SpriteAtlas* atlas)
+	SpriteBatch::SpriteBatch(const SpriteAtlas* atlas)
 		:atlas(atlas)
 	{
 	}

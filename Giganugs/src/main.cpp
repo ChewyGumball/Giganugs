@@ -2,6 +2,7 @@
 #include <DirectXMath.h>
 
 #include <chrono>
+#include <vector>
 
 #include "Graphics/Window.h"
 #include "Graphics/Renderer.h"
@@ -22,6 +23,10 @@
 #include "Game/Context.h"
 #include "Game/Factory.h"
 
+#include "Game/Data/MachineData.h"
+#include "Game/Data/Recipe.h"
+
+#include "Game/Entities/MachineEntity.h"
 #include "Game/Entities/PlayerEntity.h"
 
 #include "Util/FileUtils.h"
@@ -53,18 +58,24 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		}
 	}
 
-
-	Giganugs::Sprites::SpriteMap machines(100, 100, 32, counters);
-	for (int x = 0; x < 8; x++) {
-		for (int y = 0; y < 8; y++) {
-			machines.setAtTileCoordinates(x + 5, y + 5, x * 8 + y);
-		}
-	}
-
-	Giganugs::Game::Factory factory(map, machines);
-	
 	Giganugs::Input::Clock gameClock;
 	Giganugs::Input::Clock systemClock;
+
+	std::vector<Giganugs::Game::Data::MachineData> machineDatas;
+	for (int i = 0; i < 64; i++) {
+		machineDatas.push_back(Giganugs::Game::Data::MachineData( i, counters, i));
+	}
+
+	std::vector<Giganugs::Game::Entities::MachineEntity*> machines;
+
+	Giganugs::Game::Factory factory(map);
+	for (int x = 0; x < 8; x++) {
+		for (int y = 0; y < 8; y++) {
+			Giganugs::Game::Entities::MachineEntity* machine = new Giganugs::Game::Entities::MachineEntity(&machineDatas.at(x * 8 + y), glm::vec2((x + 3) * map.tileSize(), (y + 3) * map.tileSize()), glm::vec2(map.tileSize(), map.tileSize()), &gameClock);
+			machines.push_back(machine);
+			factory.add(machine);
+		}
+	}	
 
 	Giganugs::Input::Timer timer(&gameClock);
 
@@ -72,25 +83,19 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	player.move(Giganugs::Right, 32);
 	player.move(Giganugs::Up, 32);
 
-	Giganugs::Sprites::SpriteAnimator brownDogAnimator(spriteAnimations.locate("dog_brown_walk_down.anim"), &timer);
-	Giganugs::Sprites::SpriteAnimator tanDogAnimator(spriteAnimations.locate("dog_tan_walk_right.anim"), &timer);
-	Giganugs::Sprites::SpriteAnimator shirtDogAnimator(spriteAnimations.locate("dog_shirt_walk_left.anim"), &timer);
-
-	std::vector<Giganugs::Sprites::SpriteInstanceData> parts;
-	parts.push_back({ 0, 0, 32, 32, dogs->part(brownDogAnimator.currentFrameIndex()) });
-	parts.push_back({ player.position().x, player.position().y, 32, 32, dogs->part(player.currentAnimator().currentFrameIndex()) });
-	parts.push_back({ 32, 0, 32, 32, dogs->part(tanDogAnimator.currentFrameIndex()) });
-	parts.push_back({ 0, 32, 32, 32, dogs->part(shirtDogAnimator.currentFrameIndex()) });
-
 
 	Giganugs::Game::Context context{ &window.mouse(), &window.keyboard(), &gameClock, &systemClock };	
 
 	float speed = 128;
 
-	int32_t counterIndex = 0;
+	uint32_t counterIndex = 0;
 
 	std::vector<Giganugs::Game::Entities::Entity*> entities; 
-	Giganugs::Sprites::SpriteBatch partsBatch(dogs);
+	entities.push_back(&player);
+
+
+	Giganugs::Sprites::SpriteBatch playerBatch(dogs);
+	Giganugs::Sprites::SpriteInstanceData playerSprite = { player.position().x, player.position().y, 32, 32, dogs->part(player.currentAnimator().currentFrameIndex()) };
 
 
 	MSG message;
@@ -110,22 +115,16 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 			Util::File::MonitorFiles();
 
-			player.Update(timeDelta, context);
+			for (auto entity : entities) {
+				entity->Update(timeDelta, context);
+			}
 
 
-			parts[0].atlasData = dogs->part(brownDogAnimator.currentFrameIndex());
-			parts[1].atlasData = dogs->part(player.currentAnimator().currentFrameIndex());
-			parts[1].x = player.position().x;
-			parts[1].y = player.position().y;
-
-			parts[2].atlasData = dogs->part(tanDogAnimator.currentFrameIndex());
-			parts[3].atlasData = dogs->part(shirtDogAnimator.currentFrameIndex());
-
-			partsBatch.clear();
-			partsBatch.add(parts[0]);
-			partsBatch.add(parts[1]);
-			partsBatch.add(parts[2]);
-			partsBatch.add(parts[3]);
+			playerSprite.atlasData = dogs->part(player.currentAnimator().currentFrameIndex());
+			playerSprite.x = player.position().x;
+			playerSprite.y = player.position().y;
+			playerBatch.clear();
+			playerBatch.add(playerSprite);
 
 			if (window.keyboard()[Giganugs::Input::Key::D] == Giganugs::Input::InputState::Pressed) {
 				camera.move(glm::vec2(speed * timeDelta.count(), 0.f));
@@ -141,16 +140,7 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			if (window.keyboard()[Giganugs::Input::Key::S] == Giganugs::Input::InputState::Pressed) {
 				camera.move(glm::vec2(0.f, -speed * timeDelta.count()));
 			}
-
-			if (window.mouse().stateChangeThisFrame(Giganugs::Input::MouseButton::Left) == Giganugs::Input::InputState::Pressed) {
-				glm::vec2 realPosition = camera.unproject(window.mouse().position());
-				factory.setMachine(realPosition.x, realPosition.y, counterIndex++);
-
-				if (counterIndex >= counters->partCount()) {
-					counterIndex = 0;
-				}
-			}
-
+			
 			if (window.keyboard().stateChangeThisFrame(Giganugs::Input::Key::P) == Giganugs::Input::InputState::Pressed) {
 				gameClock.pause();
 			}
@@ -158,17 +148,11 @@ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 				gameClock.resume();
 			}
 
-			for (auto entity : entities) {
-				entity->Update(timeDelta, context);
-			}
-
 			renderer.Clear();
-
 			renderer.setCamera(camera);
 
 			factory.Draw(renderer, camera);
-
-			renderer.Draw(partsBatch);
+			renderer.Draw(playerBatch);
 
 			renderer.Swap();
 

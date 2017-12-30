@@ -19,6 +19,9 @@ namespace Giganugs::Game::Data {
 		const uint32_t atlasIndex;
 
 		const std::vector<const Recipe*> recipies;
+
+		MachineData();
+		MachineData(uint32_t id, const Sprites::SpriteAtlas* atlas, uint32_t atlasIndex);
 	};
 }
 

@@ -23,7 +23,7 @@ namespace Giganugs::Sprites {
 	{
 		return namesToIndices.at(spriteName);
 	}
-	SpriteAtlasPart SpriteAtlas::part(uint32_t index)
+	SpriteAtlasPart SpriteAtlas::part(uint32_t index) const
 	{
 		return parts[index];
 	}

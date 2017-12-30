@@ -25,7 +25,7 @@ namespace Giganugs::Sprites {
 
 		int32_t indexOf(const std::string& spriteName) const;
 
-		SpriteAtlasPart part(uint32_t index);
+		SpriteAtlasPart part(uint32_t index) const;
 
 		uint32_t partCount() const;
 

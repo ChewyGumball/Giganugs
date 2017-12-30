@@ -5,8 +5,8 @@
 
 namespace Giganugs::Game::Entities {
 
-	MachineEntity::MachineEntity(const Data::MachineData* machineData, const Input::Clock* clock)
-		:Entity(glm::vec2(), glm::vec2()), m_inventory(0,0), currentlyProcessing(false), processingTimer(clock), data(machineData)
+	MachineEntity::MachineEntity(const Data::MachineData* machineData, glm::vec2 position, glm::vec2 bounds, const Input::Clock* clock)
+		:Entity(position, bounds), m_inventory(0,0), currentlyProcessing(false), processingTimer(clock), data(machineData)
 	{
 	}
 

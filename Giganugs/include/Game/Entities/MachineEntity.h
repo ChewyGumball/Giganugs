@@ -28,11 +28,12 @@ namespace Giganugs::Game::Entities {
 		bool currentlyProcessing;
 		Input::Timer processingTimer;
 
-		const Data::MachineData* data;
 		const Data::Recipe* currentRecipe;
 
 	public:
-		MachineEntity(const Data::MachineData* machineData, const Input::Clock* clock);
+		const Data::MachineData* data;
+
+		MachineEntity(const Data::MachineData* machineData, glm::vec2 position, glm::vec2 bounds, const Input::Clock* clock);
 		~MachineEntity();
 
 		bool empty() const;

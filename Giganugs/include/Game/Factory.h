@@ -11,19 +11,21 @@ namespace Giganugs::Game {
 	class Factory
 	{
 		Sprites::SpriteMap floorMap;
-		Sprites::SpriteMap machineMap;
 
-		std::vector<Entities::ItemEntity> items;
-		std::vector<Entities::MachineEntity> machines;
+		std::vector<Entities::ItemEntity*> items;
+		std::vector<Entities::MachineEntity*> machines;
 
 	public:
-		Factory(Sprites::SpriteMap floor, Sprites::SpriteMap machine);
+		Factory(Sprites::SpriteMap floor);
 		~Factory();
 
-		void Update(std::chrono::duration<float> timeDelta);
 		void Draw(Graphics::Renderer& renderer, const Graphics::Camera& camera);
 
-		void setMachine(int32_t x, int32_t y, int32_t spriteIndex);
+		void add(Entities::MachineEntity* machine);
+		void add(Entities::ItemEntity* item);
+
+		void remove(Entities::MachineEntity* machine);
+		void remove(Entities::ItemEntity* item);
 	};
 }
 
